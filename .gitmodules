@@ -1,0 +1,3 @@
+[submodule "deps/uSockets"]
+	path = deps/uSockets
+	url = https://github.com/uNetworking/uSockets.git
