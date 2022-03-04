@@ -52,6 +52,11 @@ public:
     uint64_t getid();
     uWS::WebSocket<true,true,PerSocketData>* getconnection();
     void setuuid(char* uuid);
+    void openfile();
+    void readheader(struct PlayerHeader* header);
+    void setfileoffsetfrombeg(int32_t offset);
+    void setfileoffsetfromend(int32_t offset);
+    void setfileoffsetfromcur(int32_t offset);
     ~Actor();
 };
 #endif

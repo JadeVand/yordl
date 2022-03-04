@@ -14,6 +14,30 @@ uWS::WebSocket<true,true,PerSocketData>* Actor::getconnection(){
 void Actor::setuuid(char* uuid){
     memcpy(this->uuid,uuid,UUID4_LEN);
 }
+void Actor::openfile(){
+    f = fopen(uuid,"rb");
+}
+void Actor::readheader(struct PlayerHeader* header){
+    if(f){
+        setfileoffsetfrombeg(0);
+        fread(header,sizeof(struct PlayerHeader),1,f);
+    }
+}
+void Actor::setfileoffsetfrombeg(int32_t offset){
+    if(f){
+        fseek(f,offset,SEEK_SET);
+    }
+}
+void Actor::setfileoffsetfromend(int32_t offset){
+    if(f){
+        fseek(f,offset,SEEK_END);
+    }
+}
+void Actor::Actor::setfileoffsetfromcur(int32_t offset){
+    if(f){
+        fseek(f,offset,SEEK_CUR);
+    }
+}
 Actor::~Actor(){
     if(f){
         fclose(f);
