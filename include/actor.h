@@ -28,35 +28,20 @@ enum class Identifiers : uint32_t
     kMyId = 1,
     kGuess
 };
+struct PlayerHeader{
+    struct Uuidv4 uuid;
+    uint64_t score;
+}
 struct LeagueLDate{
     uint8_t day;
     uint8_t month;
     uint16_t year;
 };
-/*
- *PLAYER FILE SCHEMA
- *FILE NAME: UUIDV4
- *HEADER: uint16_t score
- *
- *CONTENT:
- Date
- {
-    uint8_t: day
-    uint8_t: month
-    uint16_t: year
- }
- */
-
-/*
- *HISTORY FILE SCHEMA
- *FILE NAME : history
- *CONTENT:
- History
- {
-    16 bytes  - WORD OF DAY
-    struct Date
- *
- */
+struct History{
+    char word[16];
+    struct Date d;
+    uint32_t allowedattempts;
+}
 class Actor : public std::enable_shared_from_this<Actor>{
 private:
     uWS::WebSocket<true,true,PerSocketData>* connection;

@@ -1,24 +1,25 @@
-Schema:
-
-Player Schema
+Date
 {
-    UID 16 bytes:{
-        Score:short
-        CorrectWords:[Dates as shorts]
-    }
-}
-
-history
+	u8:day
+	u8:month
+	u16:year
+}size:4
+Player
 {
-    Date as short{
-        Word: string 16 bytes
-        AllowedAttempts: byte
-    }
-}
-
-0 0 0 0 | 0 0 0 0 0 | 0 0 0 0 0 0
-Month	     day    |	year starting 2020
-
-
-000000 = 2020
-000001 = 2021
+	Header{
+		u64:high
+		u64:low
+		u64:score
+	}size:24
+	
+	Repeated{
+		Date;
+	}size:4
+}24
+History
+{
+	string16:word
+	Date;
+	u32:allowed attempts
+	
+}size:24
