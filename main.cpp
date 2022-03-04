@@ -143,7 +143,7 @@ void ServerInstance::onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std:
 
 int main()
 {
-    
+    uuid4_init();
     FILE* timestamp = fopen("leagueltimestamp/timestamp","rb");
     if(timestamp){
         
@@ -157,11 +157,7 @@ int main()
             fclose(timestamp);
         }
     }
-    uuid4_init();
-    char s[37] = {0};
-    uuid4_generate(s);
-    printf("%s\n",s);
-    ServerInstance Instance(uWS::Loop::get());
+    
     /* Keep in mind that uWS::SSLApp({options}) is the same as uWS::App() when compiled without SSL support.
      * You may swap to using uWS:App() if you don't need SSL */
     uWS::SSLApp({
