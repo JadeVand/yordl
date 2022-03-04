@@ -18,8 +18,7 @@ Player
 }24
 History
 {
-	string16:word
 	Date;
 	u32:allowed attempts
 	
-}size:24
+}size:8
