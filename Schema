@@ -1,0 +1,24 @@
+Schema:
+
+Player Schema
+{
+    UID 16 bytes:{
+        Score:short
+        CorrectWords:[Dates as shorts]
+    }
+}
+
+history
+{
+    Date as short{
+        Word: string 16 bytes
+        AllowedAttempts: byte
+    }
+}
+
+0 0 0 0 | 0 0 0 0 0 | 0 0 0 0 0 0
+Month	     day    |	year starting 2020
+
+
+000000 = 2020
+000001 = 2021
