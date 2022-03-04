@@ -1,13 +1,11 @@
 #ifndef _word_h
 #define _word_h
 
-#include <App.h>
 #include <nlohmann/json.hpp>
 #include <memory>
 #include <string>
 #include <random>
 #include <list>
-#include <uuid4.h>
 #include <iostream>
 #include <istream>
 #include <fstream>
@@ -28,12 +26,9 @@ private:
 public:
     Word();
     ~Word();
-    void getnewword(time_t servertime, time_t now);
-    void getnewchampword(time_t day);
-    void getnewabilityword(time_t day);
+    void getnewword();
     char* getword();
     char* getcategory();
-    bool neednewword(time_t servertime,time_t now);
 private:
 protected:
 };

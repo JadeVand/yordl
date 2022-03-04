@@ -16,13 +16,13 @@ void Actor::setuuid(char* uuid){
     memcpy(this->uuid,uuid,UUID4_LEN);
 }
 void Actor::openfile(){
-    char filename[32] = {0};
+    char filename[64] = {0};
     strcat(filename,"leaguelplayers/");
     strcat(filename,uuid);
     f = fopen(filename,"r+");
 }
 void Actor::createfile(){
-    char filename[32] = {0};
+    char filename[64] = {0};
     strcat(filename,"leaguelplayers/");
     strcat(filename,uuid);
     f = fopen(filename,"wb");

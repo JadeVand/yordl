@@ -17,11 +17,3 @@ Player
 		Date;
 	}size:4
 }104+repeated
-History
-{
-	Date;
-	u32:rows
-	u32:people attempted
-	u32:people succeeded
-	
-}size:16

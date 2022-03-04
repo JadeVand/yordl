@@ -9,6 +9,7 @@ time_t time_since_epoch()
 class ServerInstance
 {
 private:
+    Word wordle;
     std::set<std::shared_ptr<Actor>> players;
 public:
     ServerInstance();
@@ -95,10 +96,10 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
 void ServerInstance::onconnect(uWS::WebSocket<true,true,PerSocketData>* ws)
 {
     time_t now = time_since_epoch();
-    time_t diff = now - servertime;
-    diff/=86400;//this is our day, we check if this file currently exists, if not we make a new file with our new word
     
-    
+    if(wordle.neednewword(servertime,now)){
+        wordle.getnewword(servertime,now);
+    }
     std::shared_ptr<Actor> actor = std::make_shared<Actor>(ws);
     if(actor){
         
