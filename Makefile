@@ -1,7 +1,7 @@
-OBJFILES = main.o fileio.o deps/uSockets/*.o
+OBJFILES = main.o fileio.o uSockets/*.o
 TARGET = league-l
-CXXFLAGS = -Ideps/include -lpthread -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++17 -Ideps/include -Ideps/uSockets/src -Iinclude -g
-LDFLAGS = -Ldeps/lib -lstdc++ -lssl -lcrypto -llibuv -lz
+CXXFLAGS = -Iopenssl/include -Izlib -Ijson/include -IuWebSockets/src -IuSockets/src -lpthread -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++17 -Ideps/include -Ideps/uSockets/src -Iinclude -g
+LDFLAGS = -Lopenssl -Lzlib -lstdc++ -lssl -lcrypto -lz
 DESTDIR ?=
 prefix ?= /usr/local
 

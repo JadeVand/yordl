@@ -1,6 +1,5 @@
 #include <App.h>
 #include <nlohmann/json.hpp>
-#include <uv.h>
 #include <memory>
 #include <string>
 #include <iostream>
