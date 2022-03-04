@@ -3,6 +3,7 @@ Actor::Actor(uWS::WebSocket<true,true,PerSocketData>* connection){
     this->connection = connection;
     memset(uuid,0,UUID4_LEN);
     f = nullptr;
+    memset(&header,0,sizeof(struct PlayerHeader));
 }
 uint64_t Actor::getid()
 {
@@ -15,13 +16,31 @@ void Actor::setuuid(char* uuid){
     memcpy(this->uuid,uuid,UUID4_LEN);
 }
 void Actor::openfile(){
-    f = fopen(uuid,"rb");
+    char filename[32] = {0};
+    strcat(filename,"leaguelplayers/");
+    strcat(filename,uuid);
+    f = fopen(filename,"r+");
 }
-void Actor::readheader(struct PlayerHeader* header){
+void Actor::createfile(){
+    char filename[32] = {0};
+    strcat(filename,"leaguelplayers/");
+    strcat(filename,uuid);
+    f = fopen(filename,"wb");
+}
+bool Actor::fileexists(){
+    if(f){
+        return true;
+    }
+    return false;
+}
+void Actor::readheader(){
     if(f){
         setfileoffsetfrombeg(0);
-        fread(header,sizeof(struct PlayerHeader),1,f);
+        fread(&header,sizeof(struct PlayerHeader),1,f);
     }
+}
+struct PlayerHeader* Actor::getheader(){
+    return &header;
 }
 void Actor::setfileoffsetfrombeg(int32_t offset){
     if(f){
@@ -43,7 +62,21 @@ Actor::~Actor(){
         fclose(f);
     }
 }
-
+void Actor::writeheader(){
+    if(f){
+        setfileoffsetfrombeg(0);
+        fwrite(&header,sizeof(struct PlayerHeader),1,f);
+    }
+}
+void Actor::makeuuid(){
+    union Uuidv4u u;
+    uuid4_makeword(&u);
+    uuid4_makestring(&u,uuid);
+    memcpy(&header.uuid,&u.u,sizeof(struct Uuidv4));
+}
+char* Actor::getuuid(){
+    return uuid;
+}
 /*
  char b[80] = {0};
  for(char c = 10; c < 90; ++c){

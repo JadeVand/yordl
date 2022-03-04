@@ -52,17 +52,23 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 return;
             }
             if(!selfid.compare("null")){
-                char uuidforplayer[UUID4_LEN] = {0};
-                uuid4_generate(uuidforplayer);
-                actor->setuuid(uuidforplayer);
+                actor->makeuuid();
                 nlohmann::json senduuidpacket;
                 senduuidpacket["pid"] = Identifiers::kMyId;
-                senduuidpacket["selfid"] = uuidforplayer;
+                senduuidpacket["selfid"] = actor->getuuid();
                 actor->getconnection()->send(senduuidpacket.dump(),uWS::OpCode::TEXT,true);
+                actor->createfile();
             }else{
                 char selfuuid[UUID4_LEN] = {0};
                 memcpy(selfuuid, selfid.c_str(), UUID4_LEN);
                 actor->setuuid(selfuuid);
+                actor->openfile();
+                //uuid file should exist but in the case it doesn't just do it?
+                /*
+                 if(!actor->fileexists()){
+                    actor->createfile();
+                }
+                 */
             }
         }
             break;

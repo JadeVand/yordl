@@ -1,23 +1,6 @@
 #ifndef _actor_h
 #define _actor_h
-#include <App.h>
-#include <nlohmann/json.hpp>
-#include <memory>
-#include <string>
-#include <iostream>
-#include <iomanip>
-#include <thread>
-#include <chrono>
-#include <future>
-#include <set>
-#include <deque>
-#include <queue>
-#include <vector>
-#include <random>
-#include <sstream>
-#include <list>
-#include <algorithm>
-#include <uuid4.h>
+#include <words.h>
 struct PerSocketData {
     void* data;
 };
@@ -33,30 +16,30 @@ struct PlayerHeader{
     uint64_t score;
     char progress[80];
 };
-struct LeagueLDate{
-    uint8_t day;
-    uint8_t month;
-    uint16_t year;
-};
-struct History{
-    struct LeagueLDate d;
-    uint32_t allowedattempts;
-};
+
 class Actor : public std::enable_shared_from_this<Actor>{
 private:
     uWS::WebSocket<true,true,PerSocketData>* connection;
     char uuid[UUID4_LEN];
+
+    struct PlayerHeader header;
     FILE* f;
 public:
     Actor(uWS::WebSocket<true,true,PerSocketData>* connection);
     uint64_t getid();
     uWS::WebSocket<true,true,PerSocketData>* getconnection();
-    void setuuid(char* uuid);
     void openfile();
-    void readheader(struct PlayerHeader* header);
+    void readheader();
+    struct PlayerHeader* getheader();
     void setfileoffsetfrombeg(int32_t offset);
     void setfileoffsetfromend(int32_t offset);
     void setfileoffsetfromcur(int32_t offset);
+    void createfile();
+    bool fileexists();
+    void writeheader();
+    void makeuuid();
+    void setuuid(char* uuid);
+    char* getuuid();
     ~Actor();
 };
 #endif

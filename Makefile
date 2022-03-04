@@ -1,4 +1,4 @@
-OBJFILES = main.o actor.o uSockets/*.o uuid4.o
+OBJFILES = main.o actor.o uSockets/*.o uuid4.o words.o
 TARGET = league-l
 CXXFLAGS = -Iopenssl/include -Izlib -Ijson/include -IuWebSockets/src -IuSockets/src -lpthread -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++17 -Ideps/include -Ideps/uSockets/src -Iinclude -g
 LDFLAGS = -Lopenssl -Lzlib -lstdc++ -lssl -lcrypto -lz
