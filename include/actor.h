@@ -38,7 +38,6 @@ struct LeagueLDate{
     uint16_t year;
 };
 struct History{
-    char word[16];
     struct Date d;
     uint32_t allowedattempts;
 }
