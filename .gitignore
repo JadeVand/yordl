@@ -1,1 +1,6 @@
 *.o
+*.a
+*.dylib
+*.so
+*.DS_Store
+league-l
