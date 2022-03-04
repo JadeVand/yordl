@@ -13,17 +13,17 @@ private:
     uWS::Loop* loop;
 public:
     ServerInstance(uWS::Loop* loop);
-
+    
     void onremove(uWS::WebSocket<true,true,PerSocketData>* ws,int code, std::string_view message);
-
+    
     void onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std::string_view, uWS::OpCode opCode);
     void onconnect(uWS::WebSocket<true,true,PerSocketData>* ws);
-
+    
     
     void packethandler(std::shared_ptr<Actor> actor, uint32_t packettype, const std::string& buffer,nlohmann::json& packet);
     void sendpacket(std::shared_ptr<Actor> actor, const nlohmann::json& packet);
 private:
-
+    
 };
 
 ServerInstance::ServerInstance(uWS::Loop* loop){
@@ -37,10 +37,34 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
     Identifiers pid = (Identifiers)packettype;
     switch (pid)
     {
-
+            
         case Identifiers::kNothing:
             break;
         case Identifiers::kMyId:{
+            std::string selfid;
+            
+            nlohmann::json uuidpacket = nlohmann::json::parse(buffer);
+            try
+            {
+                selfid = uuidpacket.at("myuuid");
+            }
+            catch (nlohmann::json::exception &e)
+            {
+                return;
+            }
+            if(!selfid.compare("null")){
+                char uuidforplayer[UUID4_LEN] = {0};
+                uuid4_generate(uuidforplayer);
+                actor->setuuid(uuidforplayer);
+                nlohmann::json senduuidpacket;
+                senduuidpacket["pid"] = Identifiers::kMyId;
+                senduuidpacket["selfid"] = uuidforplayer;
+                actor->getconnection()->send(senduuidpacket.dump(),uWS::OpCode::TEXT,true);
+            }else{
+                char selfuuid[UUID4_LEN] = {0};
+                memcpy(selfuuid, selfid.c_str(), UUID4_LEN);
+                actor->setuuid(selfuuid);
+            }
         }
             break;
         case Identifiers::kGuess:{
@@ -53,14 +77,14 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             {
                 return;
             }
-
+            
         }
             break;
-    default:
-        //    Remove(Triggered);
-        break;
+        default:
+            //    Remove(Triggered);
+            break;
     }
-
+    
 }
 
 void ServerInstance::onconnect(uWS::WebSocket<true,true,PerSocketData>* ws)
@@ -89,7 +113,7 @@ void ServerInstance::onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std:
 {
     
     std::string payload(message);
-
+    
     nlohmann::json packet;
     try
     {
@@ -99,7 +123,7 @@ void ServerInstance::onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std:
     {
         return;
     }
-
+    
     uint32_t packettype = 0;
     try
     {
@@ -109,17 +133,17 @@ void ServerInstance::onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std:
     {
         return;
     }
-
+    
     std::shared_ptr<Actor> actor = ((Actor*)ws->getUserData()->data)->shared_from_this();
-
+    
     packethandler(actor, packettype, payload,packet);
-     
+    
 }
 
 
 int main()
 {
-
+    
     FILE* timestamp = fopen("leagueltimestamp/timestamp","rb");
     if(timestamp){
         
@@ -141,10 +165,10 @@ int main()
     /* Keep in mind that uWS::SSLApp({options}) is the same as uWS::App() when compiled without SSL support.
      * You may swap to using uWS:App() if you don't need SSL */
     uWS::SSLApp({
-            /* There are example certificates in uWebSockets.js repo */
-            .key_file_name = "key.pem",
-            .cert_file_name = "cert.pem",
-        }).ws<PerSocketData>("/*", {
+        /* There are example certificates in uWebSockets.js repo */
+        .key_file_name = "key.pem",
+        .cert_file_name = "cert.pem",
+    }).ws<PerSocketData>("/*", {
         /* Settings */
         .compression = uWS::SHARED_COMPRESSOR,
         .maxPayloadLength = 16 * 1024 * 1024,
@@ -159,28 +183,28 @@ int main()
             /* Open event here, you may access ws->getUserData() which points to a PerSocketData struct */
             Instance.onconnect((uWS::WebSocket<true,true,PerSocketData>*)ws);
         },
-        .message = [&Instance](auto *ws, std::string_view message, uWS::OpCode opCode) {
-            Instance.onmessage((uWS::WebSocket<true,true,PerSocketData>*)ws, message, opCode);
-            //ws->send(message, opCode, true);
-        },
-        .drain = [](auto */*ws*/) {
-            /* Check ws->getBufferedAmount() here */
-        },
-        .ping = [](auto */*ws*/, std::string_view) {
-            /* Not implemented yet */
-        },
-        .pong = [](auto */*ws*/, std::string_view) {
-            /* Not implemented yet */
-        },
-        .close = [&Instance](auto *ws/*ws*/, int code/*code*/, std::string_view message/*message*/) {
-            /* You may access ws->getUserData() here */
-            Instance.onremove((uWS::WebSocket<true,true,PerSocketData>*)ws,code,message);
-
-        }
+            .message = [&Instance](auto *ws, std::string_view message, uWS::OpCode opCode) {
+                Instance.onmessage((uWS::WebSocket<true,true,PerSocketData>*)ws, message, opCode);
+                //ws->send(message, opCode, true);
+            },
+            .drain = [](auto */*ws*/) {
+                /* Check ws->getBufferedAmount() here */
+            },
+            .ping = [](auto */*ws*/, std::string_view) {
+                /* Not implemented yet */
+            },
+            .pong = [](auto */*ws*/, std::string_view) {
+                /* Not implemented yet */
+            },
+            .close = [&Instance](auto *ws/*ws*/, int code/*code*/, std::string_view message/*message*/) {
+                /* You may access ws->getUserData() here */
+                Instance.onremove((uWS::WebSocket<true,true,PerSocketData>*)ws,code,message);
+                
+            }
     }).listen(8080, [](auto *listen_socket) {
         if (listen_socket) {
             std::cout << "Listening on port " << 8080 << std::endl;
         }
     }).run();
-
+    
 }

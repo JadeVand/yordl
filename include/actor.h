@@ -33,9 +33,11 @@ enum class Identifiers : uint32_t
 class Actor : public std::enable_shared_from_this<Actor>{
 private:
     uWS::WebSocket<true,true,PerSocketData>* connection;
+    char uuid[UUID4_LEN];
 public:
     Actor(uWS::WebSocket<true,true,PerSocketData>* connection);
     uint64_t getid();
     uWS::WebSocket<true,true,PerSocketData>* getconnection();
+    void setuuid(char* uuid);
 };
 #endif
