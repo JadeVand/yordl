@@ -10,9 +10,8 @@ class ServerInstance
 {
 private:
     std::set<std::shared_ptr<Actor>> players;
-    uWS::Loop* loop;
 public:
-    ServerInstance(uWS::Loop* loop);
+    ServerInstance();
     
     void onremove(uWS::WebSocket<true,true,PerSocketData>* ws,int code, std::string_view message);
     
@@ -26,8 +25,8 @@ private:
     
 };
 
-ServerInstance::ServerInstance(uWS::Loop* loop){
-    this->loop = loop;
+ServerInstance::ServerInstance(){
+
 }
 void ServerInstance::sendpacket(std::shared_ptr<Actor> actor, const nlohmann::json& packet){
     actor->getconnection()->send(packet.dump(),uWS::OpCode::TEXT,true);
@@ -143,6 +142,7 @@ void ServerInstance::onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std:
 
 int main()
 {
+    
     uuid4_init();
     FILE* timestamp = fopen("leagueltimestamp/timestamp","rb");
     if(timestamp){
@@ -157,7 +157,7 @@ int main()
             fclose(timestamp);
         }
     }
-    
+    ServerInstance Instance;
     /* Keep in mind that uWS::SSLApp({options}) is the same as uWS::App() when compiled without SSL support.
      * You may swap to using uWS:App() if you don't need SSL */
     uWS::SSLApp({
