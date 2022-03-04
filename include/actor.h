@@ -1,3 +1,5 @@
+#ifndef _actor_h
+#define _actor_h
 #include <App.h>
 #include <nlohmann/json.hpp>
 #include <memory>
@@ -36,3 +38,4 @@ public:
     uint64_t getid();
     uWS::WebSocket<true,true,PerSocketData>* getconnection();
 };
+#endif
