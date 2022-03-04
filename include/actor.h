@@ -31,6 +31,7 @@ enum class Identifiers : uint32_t
 struct PlayerHeader{
     struct Uuidv4 uuid;
     uint64_t score;
+    char progress[80];
 };
 struct LeagueLDate{
     uint8_t day;

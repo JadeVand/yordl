@@ -10,15 +10,18 @@ Player
 		u64:high
 		u64:low
 		u64:score
-	}size:24
+		b80:current path
+	}size:104
 	
 	Repeated{
 		Date;
 	}size:4
-}24
+}104+repeated
 History
 {
 	Date;
-	u32:allowed attempts
+	u32:rows
+	u32:people attempted
+	u32:people succeeded
 	
-}size:8
+}size:16
