@@ -1,3 +1,18 @@
 [submodule "deps/uSockets"]
 	path = deps/uSockets
 	url = https://github.com/uNetworking/uSockets.git
+[submodule "uSockets"]
+	path = uSockets
+	url = https://github.com/uNetworking/uSockets.git
+[submodule "zlib"]
+	path = zlib
+	url = https://github.com/madler/zlib.git
+[submodule "openssl"]
+	path = openssl
+	url = https://github.com/openssl/openssl.git
+[submodule "uWebSockets"]
+	path = uWebSockets
+	url = https://github.com/uNetworking/uWebSockets.git
+[submodule "json"]
+	path = json
+	url = https://github.com/nlohmann/json.git
