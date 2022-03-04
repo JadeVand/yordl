@@ -8,18 +8,26 @@
 #include <random>
 #include <list>
 #include <uuid4.h>
+#define LEAGUE_WORD_LENGTH 16
 struct LeagueLDate{
     uint8_t day;
     uint8_t month;
     uint16_t year;
 };
-struct History{
+struct LeagueLHistory{
     struct LeagueLDate d;
     uint32_t allowedattempts;
 };
 class Word{
 private:
+    char currentword[LEAGUE_WORD_LENGTH];
+    char category[LEAGUE_WORD_LENGTH];
 public:
+    Word();
+    ~Word();
+    void getnewword();
+    char* getword();
+    char* getcategory();
 private:
 protected:
 };
