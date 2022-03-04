@@ -2,6 +2,7 @@
 Actor::Actor(uWS::WebSocket<true,true,PerSocketData>* connection){
     this->connection = connection;
     memset(uuid,0,UUID4_LEN);
+    f = nullptr;
 }
 uint64_t Actor::getid()
 {
@@ -12,4 +13,9 @@ uWS::WebSocket<true,true,PerSocketData>* Actor::getconnection(){
 }
 void Actor::setuuid(char* uuid){
     memcpy(this->uuid,uuid,UUID4_LEN);
+}
+Actor::~Actor(){
+    if(f){
+        fclose(f);
+    }
 }

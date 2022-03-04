@@ -31,24 +31,26 @@ enum class Identifiers : uint32_t
 struct PlayerHeader{
     struct Uuidv4 uuid;
     uint64_t score;
-}
+};
 struct LeagueLDate{
     uint8_t day;
     uint8_t month;
     uint16_t year;
 };
 struct History{
-    struct Date d;
+    struct LeagueLDate d;
     uint32_t allowedattempts;
-}
+};
 class Actor : public std::enable_shared_from_this<Actor>{
 private:
     uWS::WebSocket<true,true,PerSocketData>* connection;
     char uuid[UUID4_LEN];
+    FILE* f;
 public:
     Actor(uWS::WebSocket<true,true,PerSocketData>* connection);
     uint64_t getid();
     uWS::WebSocket<true,true,PerSocketData>* getconnection();
     void setuuid(char* uuid);
+    ~Actor();
 };
 #endif
