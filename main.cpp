@@ -150,7 +150,7 @@ int main()
         fread(&servertime,sizeof(servertime),1,timestamp);
         fclose(timestamp);
     }else{
-        timestamp = fopen("leagueltimestamp","wb");
+        timestamp = fopen("leagueltimestamp/timestamp","wb");
         if(timestamp){
             servertime = time_since_epoch();
             fwrite(&servertime,sizeof(servertime),1,timestamp);
