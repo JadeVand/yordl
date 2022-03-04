@@ -8,6 +8,9 @@
 #include <random>
 #include <list>
 #include <uuid4.h>
+#include <iostream>
+#include <istream>
+#include <fstream>
 #define LEAGUE_WORD_LENGTH 16
 struct LeagueLDate{
     uint8_t day;
