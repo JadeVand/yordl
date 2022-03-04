@@ -1,8 +1,11 @@
-#include "fileio.h"
+#include <fileio.h>
 
-
-
-
+time_t servertime = 0;
+time_t time_since_epoch()
+{
+    auto now = std::chrono::system_clock::now();
+    return std::chrono::system_clock::to_time_t( now );
+}
 class ServerInstance
 {
 private:
@@ -37,33 +40,20 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
 
         case Identifiers::kNothing:
             break;
-        case Identifiers::kForward:{
-            actor->goforward();
-
+        case Identifiers::kMyId:{
         }
             break;
-        case Identifiers::kUpdateAngle:{
-            float angle = 0;
+        case Identifiers::kGuess:{
+            std::string letter ;
             try
             {
-                angle = packet.at("angle");
+                letter = packet.at("char");
             }
             catch (nlohmann::json::exception&)
             {
                 return;
             }
 
-            actor->updateangle(angle);
-
-        }
-            break;
-        case Identifiers::kStopForward:{
-            actor->stopforward();
-
-        }
-            break;
-        case Identifiers::kProjectile:{
-            actor->incrementbullet();
         }
             break;
     default:
@@ -75,8 +65,14 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
 
 void ServerInstance::onconnect(uWS::WebSocket<true,true,PerSocketData>* ws)
 {
+    time_t now = time_since_epoch();
+    time_t diff = now - servertime;
+    diff/=86400;//this is our day, we check if this file currently exists, if not we make a new file with our new word
+    
+    
     std::shared_ptr<Actor> actor = std::make_shared<Actor>(ws);
     if(actor){
+        
         ws->getUserData()->data = actor.get();
         players.insert(actor);
     }
@@ -124,11 +120,31 @@ void ServerInstance::onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std:
 int main()
 {
 
-
+    FILE* timestamp = fopen("leagueltimestamp/timestamp","rb");
+    if(timestamp){
+        
+        fread(&servertime,sizeof(servertime),1,timestamp);
+        fclose(timestamp);
+    }else{
+        timestamp = fopen("leagueltimestamp","wb");
+        if(timestamp){
+            servertime = time_since_epoch();
+            fwrite(&servertime,sizeof(servertime),1,timestamp);
+            fclose(timestamp);
+        }
+    }
+    uuid4_init();
+    char s[37] = {0};
+    uuid4_generate(s);
+    printf("%s\n",s);
     ServerInstance Instance(uWS::Loop::get());
     /* Keep in mind that uWS::SSLApp({options}) is the same as uWS::App() when compiled without SSL support.
      * You may swap to using uWS:App() if you don't need SSL */
-    uWS::App().ws<PerSocketData>("/*", {
+    uWS::SSLApp({
+            /* There are example certificates in uWebSockets.js repo */
+            .key_file_name = "key.pem",
+            .cert_file_name = "cert.pem",
+        }).ws<PerSocketData>("/*", {
         /* Settings */
         .compression = uWS::SHARED_COMPRESSOR,
         .maxPayloadLength = 16 * 1024 * 1024,
