@@ -26,8 +26,10 @@ bool Word::neednewword(time_t servertime,time_t now){
 }
 void Word::getnewword(time_t servertime,time_t now){
     
+#define SECONDS_IN_DAY 86400
+    
     time_t diff = now - servertime;
-    diff/=86400;//this is our day, we check if this file currently exists, if not we make a new file with our new word
+    diff/=SECONDS_IN_DAY;//this is our day, we check if this file currently exists, if not we make a new file with our new word
     std::ifstream ifs("assignedword.json");
     if(ifs.good()){
         nlohmann::json jf = nlohmann::json::parse(ifs);
@@ -36,13 +38,39 @@ void Word::getnewword(time_t servertime,time_t now){
         {
             time_t day = val.at("day");
             if(day==diff){
-                std::string c = val.at("Category");
+                std::string c = val.at("category");
 
                 currentword.assign(key);
                 category.assign(c);
+                std::ofstream ofs("currentword.json");
+                nlohmann::json j ;
+                j[currentword] = nlohmann::json::object();
+                j[currentword]["category"] = category;
+                j[currentword]["day"] = diff;
+                ofs << j;
+                ofs.close();
+
                 
-                //create current word file
-                //append to history
+                std::ifstream ifhistory("history.json");
+                if(ifhistory.good()){
+                    nlohmann::json jshistory = nlohmann::json::parse(ifhistory);
+                    ifhistory.close();
+                    std::time_t t = std::time(nullptr);
+                    std::tm *const pTInfo = std::localtime(&t);
+                    union LeagueLTime ltl = {0};
+                    ltl.p.day = (uint8_t)pTInfo->tm_mday;
+                    ltl.p.month = (uint8_t)pTInfo->tm_mon;
+                    ltl.p.day = (uint16_t)(pTInfo->tm_year+1900);
+                    jshistory[currentword] = nlohmann::json::object();
+                    jshistory[currentword]["day"] = diff;
+                    jshistory[currentword]["date"] = ltl.t;
+                    std::ofstream ofhistory("history.json");
+                    if(ofhistory.good()){
+                        ofhistory << jshistory;
+                        ofhistory.close();
+                    }
+                }
+                
                 
                 return;
             }

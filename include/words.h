@@ -12,6 +12,14 @@
 #include <istream>
 #include <fstream>
 #define LEAGUE_WORD_LENGTH 16
+union LeagueLTime{
+    uint32_t t;
+    struct Parts{
+        uint8_t day;
+        uint8_t month;
+        uint16_t year;
+    } p;
+};
 struct LeagueLDate{
     uint8_t day;
     uint8_t month;
