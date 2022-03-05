@@ -15,6 +15,7 @@ bool Word::neednewword(time_t servertime,time_t now){
      std::ifstream ifs("currentword.json");
      if(ifs.good()){
          nlohmann::json jf = nlohmann::json::parse(ifs);
+         ifs.close();
          time_t day = jf.at("day");
          if(diff==day){
              return false;
@@ -28,19 +29,27 @@ void Word::getnewword(time_t servertime,time_t now){
     time_t diff = now - servertime;
     diff/=86400;//this is our day, we check if this file currently exists, if not we make a new file with our new word
     std::ifstream ifs("assignedword.json");
-    nlohmann::json jf = nlohmann::json::parse(ifs);
-    for (auto& [key, val] : jf.items())
-    {
-        time_t day = val.at("day");
-        if(day==diff){
-            //manually set word
-            std::string c = val.at("Category");
+    if(ifs.good()){
+        nlohmann::json jf = nlohmann::json::parse(ifs);
+        ifs.close();
+        for (auto& [key, val] : jf.items())
+        {
+            time_t day = val.at("day");
+            if(day==diff){
+                std::string c = val.at("Category");
 
-            currentword.assign(key);
-            category.assign(c);
-            return;
+                currentword.assign(key);
+                category.assign(c);
+                
+                //create current word file
+                //append to history
+                
+                return;
+            }
         }
     }
+    
+    
     
     uint8_t r = 0;
     FILE* f = fopen("/dev/urandom","rb");
