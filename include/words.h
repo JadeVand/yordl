@@ -17,22 +17,18 @@ struct LeagueLDate{
     uint8_t month;
     uint16_t year;
 };
-struct LeagueLHistory{
-    struct LeagueLDate d;
-    uint32_t allowedattempts;
-};
 class Word{
 private:
-    char currentword[LEAGUE_WORD_LENGTH];
-    char category[LEAGUE_WORD_LENGTH];
+    std::string currentword;
+    std::string category;
 public:
     Word();
     ~Word();
     void getnewword(time_t servertime, time_t now);
     void getnewchampword(time_t day);
     void getnewabilityword(time_t day);
-    char* getword();
-    char* getcategory();
+    const std::string& getword();
+    const std::string& getcategory();
     bool neednewword(time_t servertime,time_t now);
 private:
 protected:

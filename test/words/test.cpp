@@ -4,24 +4,16 @@
 int main(){
    // Word w;
    // w.getnewword();
-    nlohmann::json j;
+    nlohmann::json jf;
     std::ifstream ifs("history.json");
-    if(!ifs.good()){
-        nlohmann::json j ;
-        j["hello"] = nlohmann::json::object();
-        j["hello"]["date"] = 0xdeadbeef;
-        j["hello"]["str"] = "b";
-        std::ofstream ofs("history.json");
-        ofs << j;
-        ofs.close();
-    }else{
-        j = nlohmann::json::parse(ifs);
-        j["dart"] = nlohmann::json::object();
-        j["dart"]["date"] = 0xcafef00d;
+    if(ifs.good()){
+        jf  = nlohmann::json::parse(ifs);
+        for (auto& [key, val] : jf.items())
+        {
+            time_t day = val.at("date");
+            std::cout << day << std::endl;
+        }
         ifs.close();
-        std::ofstream ofs("history.json");
-        ofs << j;
-        ofs.close();
     }
     return 0;
 }
