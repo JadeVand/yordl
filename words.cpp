@@ -98,8 +98,7 @@ void Word::getnewword(time_t servertime,time_t now){
 }
 void Word::getnewchampword(time_t day){
     /*
-    char c[] = "champion";
-    strncpy(category,c,LEAGUE_WORD_LENGTH-1);
+    category.assign("champion");
     std::ifstream ifs("leaguechamps.json");
     nlohmann::json jf = nlohmann::json::parse(ifs);
     for (auto& [key, val] : jf.items())
@@ -111,18 +110,19 @@ void Word::getnewchampword(time_t day){
 }
 void Word::getnewabilityword(time_t day){
     /*
-    char c[] = "ability";
+    //category.assign("ability");
     std::ifstream ifs("leaguechamps.json");
     nlohmann::json jf = nlohmann::json::parse(ifs);
     for (auto& [key, val] : jf.items())
     {
         for(auto& [k,v]:val.items()){
-            strncpy(category,c,LEAGUE_WORD_LENGTH-1);
+            //strncpy(category,c,LEAGUE_WORD_LENGTH-1);
             //std::cout << "key: " << k << ", value:" << v << '\n';
         }
     }
     ifs.close();
      */
+     
 }
 const std::string& Word::getword(){
     return currentword;
