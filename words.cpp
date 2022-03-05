@@ -41,7 +41,7 @@ void Word::getnewword(time_t servertime,time_t now){
             return;
         }
     }
-    /*
+    
     uint8_t r = 0;
     FILE* f = fopen("/dev/urandom","rb");
     if(f){
@@ -57,7 +57,7 @@ void Word::getnewword(time_t servertime,time_t now){
             getnewabilityword(diff);
             break;
     }
-     */
+     
 }
 void Word::getnewchampword(time_t day){
     /*
