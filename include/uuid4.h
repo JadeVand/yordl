@@ -2,8 +2,7 @@
 #define uuid4_h
 #define UUID4_VERSION "1.0.0"
 #define UUID4_LEN 37
-#include <stdio.h>
-#include <stdint.h>
+#include <urand.h>
 
 #if defined(_WIN32)
 #include <windows.h>

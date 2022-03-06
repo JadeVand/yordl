@@ -110,15 +110,42 @@ void Word::getnewchampword(time_t day){
     
     //because nlohmann json doesn't support range based iterators I have to read each key into a vector
     //then deal with the randomness from the vector
-    category.assign("champion");
     std::ifstream ifs("league-l-champions.json");
+    
     assert(ifs.good());
+    
     nlohmann::json jf = nlohmann::json::parse(ifs);
+    
+    std::vector<std::string> vec;
     for (auto& [key, val] : jf.items())
     {
-        //std::cout << "key: " << key << ", value:" << val << '\n';
+        vec.push_back(key);
     }
     ifs.close();
+    
+    
+    //erase already used(history) keys from the vector
+    std::ifstream ifshistory("league-l-history.json");
+    assert(ifshistory.good());
+    std::vector<std::string> vechistory;
+    jf = nlohmann::json::parse(ifshistory);
+    
+    for(auto& [key,val] : jf.items()){
+        vechistory.push_back(key);
+    }
+    //iterate the history find the matching and remove them
+    for(auto& k : vechistory){
+        vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
+    }
+    uint64_t r = 0;
+    URand::getrandom(&r,16);
+    r%=vec.size();
+    
+    std::string assignedword = vec.at(r);
+    std::string assignedcategory = "champion";
+    
+    setcurrentword(assignedword,assignedcategory,day);
+    sethistory(assignedword,assignedcategory,day);
 }
 void Word::getnewabilityword(time_t day){
     //how do I pick a random ability from each key's value?
