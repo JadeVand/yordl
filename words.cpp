@@ -156,7 +156,7 @@ void Word::getnewabilityword(time_t day){
     //how do I pick a random ability from each key's value?
     
     
-    std::ifstream ifs("leaguechamps.json");
+    std::ifstream ifs("league-l-champions.json");
     nlohmann::json jf = nlohmann::json::parse(ifs);
     ifs.close();
     std::vector<std::string> vec;
