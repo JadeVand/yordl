@@ -81,7 +81,7 @@ void Word::sethistory(std::string currentword,std::string category,time_t day){
     jshistory[currentword]["date"] = ltl.t;
     jshistory[currentword]["attempts"] = 0;
     jshistory[currentword]["successful"] = 0;
-    std::ofstream ofhistory("history.json");
+    std::ofstream ofhistory("league-l-history.json");
     assert(ofhistory.good());
     ofhistory << jshistory;
     ofhistory.close();
