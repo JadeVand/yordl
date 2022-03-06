@@ -25,6 +25,8 @@ private:
     struct PlayerHeader header;
     FILE* f;
     URand* ur;
+    uint8_t xindex;
+    uint8_t yindex;
 public:
     Actor(uWS::WebSocket<true,true,PerSocketData>* connection,URand* ur);
     uint64_t getid();
