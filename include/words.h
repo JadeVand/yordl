@@ -5,8 +5,6 @@
 #include <nlohmann/json.hpp>
 #include <memory>
 #include <string>
-#include <list>
-#include <iostream>
 #include <fstream>
 #define LEAGUE_WORD_LENGTH 16
 union LeagueLTime{
