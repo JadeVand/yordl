@@ -1,6 +1,7 @@
 #include <actor.h>
-Actor::Actor(uWS::WebSocket<true,true,PerSocketData>* connection){
+Actor::Actor(uWS::WebSocket<true,true,PerSocketData>* connection,URand* ur){
     this->connection = connection;
+    this->ur = ur;
     memset(uuid,0,UUID4_LEN);
     f = nullptr;
     memset(&header,0,sizeof(struct PlayerHeader));
@@ -20,6 +21,7 @@ void Actor::openfile(){
     strcat(filename,"leaguelplayers/");
     strcat(filename,uuid);
     f = fopen(filename,"r+");
+    
 }
 void Actor::createfile(){
     char filename[64] = {0};

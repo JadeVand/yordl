@@ -24,8 +24,9 @@ private:
 
     struct PlayerHeader header;
     FILE* f;
+    URand* ur;
 public:
-    Actor(uWS::WebSocket<true,true,PerSocketData>* connection);
+    Actor(uWS::WebSocket<true,true,PerSocketData>* connection,URand* ur);
     uint64_t getid();
     uWS::WebSocket<true,true,PerSocketData>* getconnection();
     void openfile();

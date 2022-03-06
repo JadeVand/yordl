@@ -101,7 +101,7 @@ void ServerInstance::onconnect(uWS::WebSocket<true,true,PerSocketData>* ws)
     if(wordle.neednewword(servertime,now)){
         wordle.getnewword(servertime,now);
     }
-    std::shared_ptr<Actor> actor = std::make_shared<Actor>(ws);
+    std::shared_ptr<Actor> actor = std::make_shared<Actor>(ws,&ur);
     if(actor){
         
         ws->getUserData()->data = actor.get();
