@@ -1,6 +1,6 @@
-OBJFILES = test.o
+OBJFILES = test.o ../../urand.o
 TARGET = test
-CXXFLAGS = -std=c++17 -I../../json/include
+CXXFLAGS = -std=c++17 -I../../json/include -I../../include
 LDFLAGS =
 DESTDIR ?=
 prefix ?= /usr/local

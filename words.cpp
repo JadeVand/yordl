@@ -192,3 +192,33 @@ const std::string& Word::getword(){
 const std::string& Word::getcategory(){
     return category;
 }
+void Word::incrementstatattempt(){
+    FILE* f = fopen("currentstate","rb+");
+    assert(f);
+    
+    uint64_t attempt = 0;
+    
+    fread(&attempt,sizeof(uint64_t),1,f);
+    attempt++;
+    fseek(f,0,SEEK_SET);
+    fwrite(&attempt,sizeof(uint64_t),1,f);
+    fclose(f);
+}
+void Word::incrementstatsattemptandsuccess(){
+    FILE* f = fopen("currentstate","rb+");
+    assert(f);
+
+    uint64_t attempt = 0;
+    uint64_t success = 0;
+    
+    fread(&attempt,sizeof(uint64_t),1,f);
+    fread(&success,sizeof(uint64_t),1,f);
+    
+    attempt++;
+    success++;
+    
+    fseek(f,0,SEEK_SET);
+    fwrite(&attempt,sizeof(uint64_t),1,f);
+    fwrite(&success,sizeof(uint64_t),1,f);
+    fclose(f);
+}

@@ -36,6 +36,8 @@ public:
     const std::string& getcategory();
     bool neednewword(time_t servertime,time_t now);
     void gethistory(std::vector<std::string>& vechistory);
+    void incrementstatattempt();
+    void incrementstatsattemptandsuccess();
 private:
 protected:
     void sethistory(std::string currentword,std::string category,time_t day);
