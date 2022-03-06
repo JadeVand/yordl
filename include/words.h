@@ -37,7 +37,7 @@ public:
     const std::string& getword();
     const std::string& getcategory();
     bool neednewword(time_t servertime,time_t now);
-    
+    void gethistory(std::vector<std::string>& vechistory);
 private:
 protected:
     void sethistory(std::string currentword,std::string category,time_t day);

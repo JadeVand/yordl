@@ -105,6 +105,16 @@ void Word::getnewword(time_t servertime,time_t now){
     }
     
 }
+void Word::gethistory(std::vector<std::string>& vechistory){
+    std::ifstream ifshistory("league-l-history.json");
+    assert(ifshistory.good());
+    nlohmann::json jf = nlohmann::json::parse(ifshistory);
+    ifshistory.close();
+    
+    for(auto& [key,val] : jf.items()){
+        vechistory.push_back(key);
+    }
+}
 void Word::getnewchampword(time_t day){
     //how do I pick a random key from the json file?
     
@@ -127,15 +137,8 @@ void Word::getnewchampword(time_t day){
     
     
     //erase already used(history) keys from the vector
-    std::ifstream ifshistory("league-l-history.json");
-    assert(ifshistory.good());
     std::vector<std::string> vechistory;
-    jf = nlohmann::json::parse(ifshistory);
-    ifshistory.close();
-    
-    for(auto& [key,val] : jf.items()){
-        vechistory.push_back(key);
-    }
+    gethistory(vechistory);
     //iterate the history find the matching and remove them
     for(auto& k : vechistory){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
@@ -156,13 +159,15 @@ void Word::getnewabilityword(time_t day){
     std::ifstream ifs("leaguechamps.json");
     nlohmann::json jf = nlohmann::json::parse(ifs);
     ifs.close();
+    std::vector<std::string> vec;
+    
     for (auto& [key, val] : jf.items())
     {
         for(auto& [k,v]:val.items()){
-            //strncpy(category,c,LEAGUE_WORD_LENGTH-1);
-            //std::cout << "key: " << k << ", value:" << v << '\n';
+            vec.push_back(v);
         }
     }
+    
     
 }
 const std::string& Word::getword(){
