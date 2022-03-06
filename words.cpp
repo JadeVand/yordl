@@ -7,12 +7,13 @@ Word::Word(){
 Word::~Word(){
     
 }
+#define SECONDS_IN_DAY 86400
 bool Word::neednewword(time_t servertime,time_t now){
     
      time_t diff = now - servertime;
-     diff/=86400;//this is our day, we check if this file currently exists, if not we make a new file with our new word
+     diff/=SECONDS_IN_DAY;//this is our day, we check if this file currently exists, if not we make a new file with our new word
      
-     std::ifstream ifs("currentword.json");
+     std::ifstream ifs("league-l-currentword.json");
      if(ifs.good()){
          nlohmann::json jf = nlohmann::json::parse(ifs);
          ifs.close();
@@ -24,13 +25,49 @@ bool Word::neednewword(time_t servertime,time_t now){
     
     return true;
 }
+void Word::sethistory(std::string currentword,std::string category,time_t day){
+    std::ifstream ifhistory("league-l-history.json");
+    if(ifhistory.good()){
+        nlohmann::json jshistory = nlohmann::json::parse(ifhistory);
+        ifhistory.close();
+        std::time_t t = std::time(nullptr);
+        std::tm *const pTInfo = std::localtime(&t);
+        union LeagueLTime ltl = {0};
+        ltl.p.day = (uint8_t)pTInfo->tm_mday;
+        ltl.p.month = (uint8_t)pTInfo->tm_mon;
+        ltl.p.day = (uint16_t)(pTInfo->tm_year+1900);
+        jshistory[currentword] = nlohmann::json::object();
+        jshistory["category"] = category;
+        jshistory[currentword]["day"] = day;
+        jshistory[currentword]["date"] = ltl.t;
+        jshistory[currentword]["attempts"] = 0;
+        jshistory[currentword]["successful"] = 0;
+        std::ofstream ofhistory("history.json");
+        if(ofhistory.good()){
+            ofhistory << jshistory;
+            ofhistory.close();
+        }
+    }
+}
+void Word::setcurrentword(std::string currentword,std::string category, time_t day){
+    this->currentword.assign(currentword);
+    this->category.assign(category);
+    std::ofstream ofs("currentword.json");
+    nlohmann::json j ;
+    j[currentword] = nlohmann::json::object();
+    j[currentword]["category"] = category;
+    j[currentword]["day"] = day;
+    ofs << j;
+    ofs.close();
+}
 void Word::getnewword(time_t servertime,time_t now){
     
-#define SECONDS_IN_DAY 86400
-    
+
+    std::string assignedword;
+    std::string assignedcategory;
     time_t diff = now - servertime;
     diff/=SECONDS_IN_DAY;//this is our day, we check if this file currently exists, if not we make a new file with our new word
-    std::ifstream ifs("assignedword.json");
+    std::ifstream ifs("league-l-assignedword.json");
     if(ifs.good()){
         nlohmann::json jf = nlohmann::json::parse(ifs);
         ifs.close();
@@ -39,44 +76,19 @@ void Word::getnewword(time_t servertime,time_t now){
             time_t day = val.at("day");
             if(day==diff){
                 std::string c = val.at("category");
-
-                currentword.assign(key);
-                category.assign(c);
-                std::ofstream ofs("currentword.json");
-                nlohmann::json j ;
-                j[currentword] = nlohmann::json::object();
-                j[currentword]["category"] = category;
-                j[currentword]["day"] = diff;
-                ofs << j;
-                ofs.close();
-
+                assert(!c.empty());
                 
-                std::ifstream ifhistory("history.json");
-                if(ifhistory.good()){
-                    nlohmann::json jshistory = nlohmann::json::parse(ifhistory);
-                    ifhistory.close();
-                    std::time_t t = std::time(nullptr);
-                    std::tm *const pTInfo = std::localtime(&t);
-                    union LeagueLTime ltl = {0};
-                    ltl.p.day = (uint8_t)pTInfo->tm_mday;
-                    ltl.p.month = (uint8_t)pTInfo->tm_mon;
-                    ltl.p.day = (uint16_t)(pTInfo->tm_year+1900);
-                    jshistory[currentword] = nlohmann::json::object();
-                    jshistory[currentword]["day"] = diff;
-                    jshistory[currentword]["date"] = ltl.t;
-                    std::ofstream ofhistory("history.json");
-                    if(ofhistory.good()){
-                        ofhistory << jshistory;
-                        ofhistory.close();
-                    }
-                }
-                
-                
-                return;
+                assignedword.assign(key);
+                assignedcategory.assign(c);
+                break;
             }
         }
     }
-    
+    if(!assignedword.empty()){
+        setcurrentword(assignedword,assignedcategory,diff);
+        sethistory(currentword,category,diff);
+        return;
+    }
     
     
     uint8_t r = 0;
@@ -87,7 +99,6 @@ void Word::getnewword(time_t servertime,time_t now){
     }
     switch(r){
         case 0://champ
-            
             getnewchampword(diff);
             break;
         case 1://ability
@@ -97,7 +108,7 @@ void Word::getnewword(time_t servertime,time_t now){
      
 }
 void Word::getnewchampword(time_t day){
-    /*
+    //how do I pick a random key from the json file?
     category.assign("champion");
     std::ifstream ifs("leaguechamps.json");
     nlohmann::json jf = nlohmann::json::parse(ifs);
@@ -106,9 +117,10 @@ void Word::getnewchampword(time_t day){
         //std::cout << "key: " << key << ", value:" << val << '\n';
     }
     ifs.close();
-     */
 }
 void Word::getnewabilityword(time_t day){
+    //how do I pick a random ability from each key's value?
+    
     /*
     //category.assign("ability");
     std::ifstream ifs("leaguechamps.json");

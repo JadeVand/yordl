@@ -151,13 +151,13 @@ int main()
 {
     
     uuid4_init();
-    FILE* timestamp = fopen("leagueltimestamp/timestamp","rb");
+    FILE* timestamp = fopen("league-l-timestamp","rb");
     if(timestamp){
         
         fread(&servertime,sizeof(servertime),1,timestamp);
         fclose(timestamp);
     }else{
-        timestamp = fopen("leagueltimestamp/timestamp","wb");
+        timestamp = fopen("league-l-timestamp","wb");
         if(timestamp){
             servertime = time_since_epoch();
             fwrite(&servertime,sizeof(servertime),1,timestamp);

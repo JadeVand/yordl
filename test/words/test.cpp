@@ -1,6 +1,8 @@
 
 #include "words.h"
 #include <chrono>
+#include <memory>
+#include <vector>
 class T{
 public:
     T(){
@@ -13,27 +15,23 @@ public:
     }
 };
 using namespace std;
+class StringContainer{
+public:
+std:;string s;
+};
 int main()
 {
-    union LeagueLTime{
-        uint32_t t;
-        struct Parts{
-            uint8_t day;
-            uint8_t month;
-            uint16_t year;
-        } p;
-    };
-    std::time_t t = std::time(nullptr);
-      std::tm *const pTInfo = std::localtime(&t);
-    std::cout << "Current year: " << 1900 + pTInfo->tm_year << '\n';
-    union LeagueLTime llt = {0};
-    llt.p.day = (uint8_t)pTInfo->tm_mday;
-    llt.p.month = (uint8_t)pTInfo->tm_mon;
-    llt.p.year = (uint16_t)(pTInfo->tm_year + 1900);
-    //std::cout << llt.t;
-    //std::cout <<( llt.t>>8&0xFF);
-    union LeagueLTime lt;
-    lt.t = 132514308;
-    std::cout <<( lt.t>>16);
+    nlohmann::json j ;
+    j["x"] = nlohmann::json::object();
+    j["x"]["y"] = "x";
+    j["y"] = nlohmann::json::object();
+    j["y"]["x"] = "y";
+    std::vector<std::shared_ptr<StringContainer> vsc ;
+
+    for(auto&[key,val] : j){
+        std::shared_ptr<StringContainer> sc = std::make_shared<StringContainer>();
+        sc->s.assign(k);
+        vsc.push_back(sc);
+    }
     return 0;
 }

@@ -33,12 +33,16 @@ public:
     Word();
     ~Word();
     void getnewword(time_t servertime, time_t now);
-    void getnewchampword(time_t day);
-    void getnewabilityword(time_t day);
+    
     const std::string& getword();
     const std::string& getcategory();
     bool neednewword(time_t servertime,time_t now);
+    
 private:
 protected:
+    void sethistory(std::string currentword,std::string category,time_t day);
+    void getnewchampword(time_t day);
+    void getnewabilityword(time_t day);
+    void setcurrentword(std::string currentword,std::string category, time_t day);
 };
 #endif
