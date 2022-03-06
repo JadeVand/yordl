@@ -22,6 +22,46 @@ bool Word::neednewword(time_t servertime,time_t now){
     if(diff==day){
         return false;
     }
+    
+    //read the history state
+    
+    FILE* f = fopen("league-l-currentstate","rb");
+    assert(f);
+    
+    uint64_t attempt = 0;
+    uint64_t success = 0;
+    fread(&attempt,sizeof(uint64_t),1,f);
+    fread(&success,sizeof(uint64_t),1,f);
+    
+    
+    
+    //read the json history file so we can edit the attempts and success
+    std::ifstream ifhistory("league-l-history.json");
+    assert(ifhistory.good());
+    nlohmann::json jshistory = nlohmann::json::parse(ifhistory);
+    ifhistory.close();
+    
+    //fix attempts and success
+    jshistory[currentword]["attempts"] = attempt;
+    jshistory[currentword]["successful"] = success;
+    
+    //rewrite history to file
+    std::ofstream ofhistory;
+    assert(ofhistory.good());
+    ofhistory << jshistory;
+    ofhistory.close();
+    
+    
+    
+    
+    //destroy the state
+    attempt = 0;
+    success = 0;
+    fseek(f,0,SEEK_SET);
+    fwrite(&attempt,sizeof(uint64_t),1,f);
+    fwrite(&success,sizeof(uint64_t),1,f);
+    fclose(f);
+    
     return true;
 }
 void Word::sethistory(std::string currentword,std::string category,time_t day){
@@ -192,8 +232,8 @@ const std::string& Word::getword(){
 const std::string& Word::getcategory(){
     return category;
 }
-void Word::incrementstatattempt(){
-    FILE* f = fopen("currentstate","rb+");
+void Word::incrementstateattempt(){
+    FILE* f = fopen("league-l-currentstate","rb+");
     assert(f);
     
     uint64_t attempt = 0;
@@ -204,8 +244,8 @@ void Word::incrementstatattempt(){
     fwrite(&attempt,sizeof(uint64_t),1,f);
     fclose(f);
 }
-void Word::incrementstatsattemptandsuccess(){
-    FILE* f = fopen("currentstate","rb+");
+void Word::incrementstateattemptandsuccess(){
+    FILE* f = fopen("league-l-currentstate","rb+");
     assert(f);
 
     uint64_t attempt = 0;
