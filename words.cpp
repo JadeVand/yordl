@@ -2,7 +2,8 @@
 
 #include "words.h"
 
-Word::Word(){
+Word::Word(URand* ur){
+    this->ur = ur;
 }
 Word::~Word(){
     
@@ -144,7 +145,7 @@ void Word::getnewchampword(time_t day){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
     }
     uint32_t r = 0;
-    URand::getrandom(&r);
+   // URand::getrandom(&r);
     r%=vec.size();
     std::string assignedword = vec.at(r);
     std::string assignedcategory = "champion";
@@ -177,7 +178,7 @@ void Word::getnewabilityword(time_t day){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
     }
     uint32_t r = 0;
-    URand::getrandom(&r);
+    //URand::getrandom(&r);
     r%=vec.size();
     
     std::string assignedword = vec.at(r);

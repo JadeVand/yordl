@@ -10,6 +10,7 @@ class ServerInstance
 {
 private:
     Word wordle;
+    URand ur;
     std::set<std::shared_ptr<Actor>> players;
 public:
     ServerInstance();
@@ -26,7 +27,7 @@ private:
     
 };
 
-ServerInstance::ServerInstance(){
+ServerInstance::ServerInstance():wordle(&ur){
 
 }
 void ServerInstance::sendpacket(std::shared_ptr<Actor> actor, const nlohmann::json& packet){
@@ -150,7 +151,7 @@ void ServerInstance::onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std:
 int main()
 {
     
-    uuid4_init();
+    //uuid4_init();
     FILE* timestamp = fopen("league-l-timestamp","rb");
     if(timestamp){
         

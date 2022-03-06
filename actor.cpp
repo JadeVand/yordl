@@ -70,8 +70,8 @@ void Actor::writeheader(){
 }
 void Actor::makeuuid(){
     union Uuidv4u u;
-    uuid4_makeword(&u);
-    uuid4_makestring(&u,uuid);
+    //uuid4_makeword(&u);
+    //uuid4_makestring(&u,uuid);
     memcpy(&header.uuid,&u.u,sizeof(struct Uuidv4));
 }
 char* Actor::getuuid(){

@@ -1,15 +1,12 @@
 #ifndef _word_h
 #define _word_h
-
+#include <urand.h>
 #include <App.h>
 #include <nlohmann/json.hpp>
 #include <memory>
 #include <string>
-#include <random>
 #include <list>
-#include <uuid4.h>
 #include <iostream>
-#include <istream>
 #include <fstream>
 #define LEAGUE_WORD_LENGTH 16
 union LeagueLTime{
@@ -29,8 +26,9 @@ class Word{
 private:
     std::string currentword;
     std::string category;
+    URand* ur;
 public:
-    Word();
+    Word(URand* ur);
     ~Word();
     void getnewword(time_t servertime, time_t now);
     
