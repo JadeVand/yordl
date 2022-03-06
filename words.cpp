@@ -116,12 +116,14 @@ void Word::getnewchampword(time_t day){
     
     nlohmann::json jf = nlohmann::json::parse(ifs);
     
+    ifs.close();
+    
     std::vector<std::string> vec;
     for (auto& [key, val] : jf.items())
     {
         vec.push_back(key);
     }
-    ifs.close();
+    
     
     
     //erase already used(history) keys from the vector
@@ -129,6 +131,7 @@ void Word::getnewchampword(time_t day){
     assert(ifshistory.good());
     std::vector<std::string> vechistory;
     jf = nlohmann::json::parse(ifshistory);
+    ifshistory.close();
     
     for(auto& [key,val] : jf.items()){
         vechistory.push_back(key);
@@ -149,19 +152,17 @@ void Word::getnewchampword(time_t day){
 void Word::getnewabilityword(time_t day){
     //how do I pick a random ability from each key's value?
     
-    /*
-     //category.assign("ability");
-     std::ifstream ifs("leaguechamps.json");
-     nlohmann::json jf = nlohmann::json::parse(ifs);
-     for (auto& [key, val] : jf.items())
-     {
-     for(auto& [k,v]:val.items()){
-     //strncpy(category,c,LEAGUE_WORD_LENGTH-1);
-     //std::cout << "key: " << k << ", value:" << v << '\n';
-     }
-     }
-     ifs.close();
-     */
+    
+    std::ifstream ifs("leaguechamps.json");
+    nlohmann::json jf = nlohmann::json::parse(ifs);
+    ifs.close();
+    for (auto& [key, val] : jf.items())
+    {
+        for(auto& [k,v]:val.items()){
+            //strncpy(category,c,LEAGUE_WORD_LENGTH-1);
+            //std::cout << "key: " << k << ", value:" << v << '\n';
+        }
+    }
     
 }
 const std::string& Word::getword(){
