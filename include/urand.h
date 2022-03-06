@@ -1,11 +1,12 @@
 #ifndef _urand_h
 #define _urand_h
-#include <stdio.h>
-#include <stdint.h>
+#include <random>
+#include <iostream>
+#include <fstream>
 #include <assert.h>
 class URand{
 public:
-    static void getrandom(uint64_t* r,uint8_t s);
+   static uint16_t getrandom(uint16_t* r);
 };
 
 #endif
