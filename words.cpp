@@ -143,7 +143,7 @@ void Word::getnewchampword(time_t day){
     for(auto& k : vechistory){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
     }
-    uint16_t r = 0;
+    uint32_t r = 0;
     URand::getrandom(&r);
     r%=vec.size();
     std::string assignedword = vec.at(r);
@@ -168,6 +168,17 @@ void Word::getnewabilityword(time_t day){
         }
     }
     
+    
+    //erase already used(history) keys from the vector
+    std::vector<std::string> vechistory;
+    gethistory(vechistory);
+    //iterate the history find the matching and remove them
+    for(auto& k : vechistory){
+        vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
+    }
+    uint32_t r = 0;
+    URand::getrandom(&r);
+    r%=vec.size();
     
 }
 const std::string& Word::getword(){

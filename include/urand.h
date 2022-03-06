@@ -6,7 +6,7 @@
 #include <assert.h>
 class URand{
 public:
-   static uint16_t getrandom(uint16_t* r);
+   static void getrandom(uint32_t* r);
 };
 
 #endif
