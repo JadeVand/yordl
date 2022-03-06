@@ -33,7 +33,7 @@ void Word::sethistory(std::string currentword,std::string category,time_t day){
     union LeagueLTime ltl = {0};
     ltl.p.day = (uint8_t)pTInfo->tm_mday;
     ltl.p.month = (uint8_t)pTInfo->tm_mon;
-    ltl.p.day = (uint16_t)(pTInfo->tm_year+1900);
+    ltl.p.year = (uint16_t)(pTInfo->tm_year+1900);
     jshistory[currentword] = nlohmann::json::object();
     jshistory["category"] = category;
     jshistory[currentword]["day"] = day;
@@ -180,6 +180,11 @@ void Word::getnewabilityword(time_t day){
     URand::getrandom(&r);
     r%=vec.size();
     
+    std::string assignedword = vec.at(r);
+    std::string assignedcategory = "ability";
+    
+    setcurrentword(assignedword,assignedcategory,day);
+    sethistory(assignedword,assignedcategory,day);
 }
 const std::string& Word::getword(){
     return currentword;
