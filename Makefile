@@ -12,5 +12,5 @@ all : $(OBJFILES)
 .PHONE : clean
 clean:
 	rm -rf $(TARGET)
-	rm -rf $(TARGET).o
+	rm *.o
 
