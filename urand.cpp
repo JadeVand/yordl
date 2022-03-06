@@ -10,6 +10,10 @@ void URand::generateuuid4seed(){
     seed[0] = distribution(generator);
     seed[1] = distribution(generator);
 }
+uint32_t URand::getu32rand(){
+    std::uniform_int_distribution<uint32_t> distribution(0,std::numeric_limits<uint32_t>::max());
+    return distribution(generator);
+}
 uint64_t URand::xorshift128plus(uint64_t* s){
     /* http://xorshift.di.unimi.it/xorshift128plus.c */
     uint64_t s1 = s[0];

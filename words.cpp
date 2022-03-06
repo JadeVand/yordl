@@ -144,8 +144,7 @@ void Word::getnewchampword(time_t day){
     for(auto& k : vechistory){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
     }
-    uint32_t r = 0;
-   // URand::getrandom(&r);
+    uint32_t r = ur->getu32rand();
     r%=vec.size();
     std::string assignedword = vec.at(r);
     std::string assignedcategory = "champion";
@@ -177,8 +176,7 @@ void Word::getnewabilityword(time_t day){
     for(auto& k : vechistory){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
     }
-    uint32_t r = 0;
-    //URand::getrandom(&r);
+    uint32_t r = ur->getu32rand();
     r%=vec.size();
     
     std::string assignedword = vec.at(r);
