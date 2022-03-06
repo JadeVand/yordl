@@ -45,5 +45,6 @@ int main()
     std::cout << vec.size() << std::endl;
     vec.erase(std::remove(vec.begin(), vec.end(), "d"), vec.end());
     std::cout << vec.size() << std::endl;
+    assert(1==2);
     return 0;
 }
