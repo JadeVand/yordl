@@ -52,7 +52,7 @@ void Word::sethistory(std::string currentword,std::string category,time_t day){
 void Word::setcurrentword(std::string currentword,std::string category, time_t day){
     this->currentword.assign(currentword);
     this->category.assign(category);
-    std::ofstream ofs("currentword.json");
+    std::ofstream ofs("league-l-currentword.json");
     nlohmann::json j ;
     j[currentword] = nlohmann::json::object();
     j[currentword]["category"] = category;

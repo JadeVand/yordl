@@ -16,4 +16,9 @@ Player
 	Repeated{
 		Date;
 	}size:4
-}104+repeated
+}size:104+ (4 repeated )
+
+CurrentState{
+	u64:attempted
+	u64:succeeded
+}size:16
