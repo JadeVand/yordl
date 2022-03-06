@@ -165,6 +165,17 @@ int main()
             fclose(timestamp);
         }
     }
+    FILE* currentstate = fopen("league-l-currentstate","rb");
+    if(!currentstate){
+        currentstate = fopen("league-l-currentstate","wb");
+        uint64_t attempt = 0;
+        uint64_t success = 0;
+        fwrite(&attempt,sizeof(uint64_t),0,currentstate);
+        fwrite(&success,sizeof(uint64_t),0,currentstate);
+        fclose(currentstate);
+    }else{
+        fclose(currentstate);
+    }
     ServerInstance Instance;
     /* Keep in mind that uWS::SSLApp({options}) is the same as uWS::App() when compiled without SSL support.
      * You may swap to using uWS:App() if you don't need SSL */
