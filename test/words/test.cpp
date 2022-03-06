@@ -3,6 +3,7 @@
 #include <chrono>
 #include <memory>
 #include <vector>
+#include <iostream>
 class T{
 public:
     T(){
@@ -15,23 +16,34 @@ public:
     }
 };
 using namespace std;
-class StringContainer{
-public:
-std:;string s;
-};
+
 int main()
 {
     nlohmann::json j ;
-    j["x"] = nlohmann::json::object();
-    j["x"]["y"] = "x";
-    j["y"] = nlohmann::json::object();
-    j["y"]["x"] = "y";
-    std::vector<std::shared_ptr<StringContainer> vsc ;
-
-    for(auto&[key,val] : j){
-        std::shared_ptr<StringContainer> sc = std::make_shared<StringContainer>();
-        sc->s.assign(k);
-        vsc.push_back(sc);
+    j["a"] = nlohmann::json::object();
+    j["a"]["1"] = "a";
+    j["b"] = nlohmann::json::object();
+    j["b"]["1"] = "b";
+    j["c"] = nlohmann::json::object();
+    j["c"]["1"] = "c";
+    j["d"] = nlohmann::json::object();
+    j["d"]["1"] = "d";
+    
+    j.items().begin();
+    uint16_t r = 0;
+    FILE* f = fopen("/dev/urandom","rb");
+    if(f){
+        fread(&r,sizeof(uint8_t),1,f);
+        fclose(f);
     }
+    
+    
+    std::vector<std::string> vec;
+    for(auto&[key,val] : j.items()){
+        vec.push_back(key);
+    }
+    std::cout << vec.size() << std::endl;
+    vec.erase(std::remove(vec.begin(), vec.end(), "d"), vec.end());
+    std::cout << vec.size() << std::endl;
     return 0;
 }

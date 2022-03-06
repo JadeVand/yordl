@@ -109,8 +109,11 @@ void Word::getnewword(time_t servertime,time_t now){
 }
 void Word::getnewchampword(time_t day){
     //how do I pick a random key from the json file?
+    
+    //because nlohmann json doesn't support range based iterators I have to read each key into a vector
+    //then deal with the randomness from the vector
     category.assign("champion");
-    std::ifstream ifs("leaguechamps.json");
+    std::ifstream ifs("league-l-champions.json");
     nlohmann::json jf = nlohmann::json::parse(ifs);
     for (auto& [key, val] : jf.items())
     {

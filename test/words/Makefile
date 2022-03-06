@@ -1,5 +1,5 @@
-OBJFILES = test.o words.o
-TARGET = league-l
+OBJFILES = test.o
+TARGET = test
 CXXFLAGS = -std=c++17 -I../../json/include
 LDFLAGS =
 DESTDIR ?=
