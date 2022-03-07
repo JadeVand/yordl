@@ -57,7 +57,7 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 actor->makeuuid();
                 nlohmann::json senduuidpacket;
                 senduuidpacket["pid"] = Identifiers::kMyId;
-                senduuidpacket["selfid"] = actor->getuuid();
+                senduuidpacket["myuuid"] = actor->getuuid();
                 actor->getconnection()->send(senduuidpacket.dump(),uWS::OpCode::TEXT,true);
                 actor->createfile();
             }else{
@@ -78,7 +78,7 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             std::string letter ;
             try
             {
-                letter = packet.at("char");
+                letter = packet.at("row");
             }
             catch (nlohmann::json::exception&)
             {
