@@ -10,8 +10,8 @@ Player
 		u64:high
 		u64:low
 		u64:score
-		b96:current path
-	}size:120
+		b128:current path
+	}size:152
 	
 	Repeated{
 		Date;

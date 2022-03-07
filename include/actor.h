@@ -8,13 +8,14 @@ struct PerSocketData {
 enum class Identifiers : uint32_t
 {
     kNothing = 0,
-    kMyId = 1,
-    kGuess
+    kMyId
+    kGuess,
+    kStatsforUuid,
 };
 struct PlayerHeader{
     struct Uuidv4 uuid;
     uint64_t score;
-    char progress[80];
+    char progress[128];
 };
 
 class Actor : public std::enable_shared_from_this<Actor>{
@@ -25,8 +26,7 @@ private:
     struct PlayerHeader header;
     FILE* f;
     URand* ur;
-    uint8_t xindex;
-    uint8_t yindex;
+    uint8_t index;
 public:
     Actor(uWS::WebSocket<true,true,PerSocketData>* connection,URand* ur);
     uint64_t getid();

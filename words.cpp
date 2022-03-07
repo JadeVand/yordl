@@ -1,7 +1,16 @@
 
 
 #include "words.h"
-
+uint8_t getrowsforlength(uint64_t length){
+    if(length<5)
+        return 3;
+    if(length<8)
+        return 6;
+    if(length<11)
+        return 7;
+    if(length<17)
+        return 8;
+}
 Word::Word(URand* ur){
     this->ur = ur;
 }

@@ -78,12 +78,16 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             std::string letter ;
             try
             {
-                letter = packet.at("row");
+                letter = packet.at("guess");
             }
             catch (nlohmann::json::exception&)
             {
                 return;
             }
+            
+        }
+            break;
+        case Identifiers::kStatsForUuid:{
             
         }
             break;

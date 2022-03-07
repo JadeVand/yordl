@@ -7,6 +7,7 @@
 #include <string>
 #include <fstream>
 #define LEAGUE_WORD_LENGTH 16
+
 union LeagueLTime{
     uint32_t t;
     struct Parts{
@@ -20,6 +21,7 @@ struct LeagueLDate{
     uint8_t month;
     uint16_t year;
 };
+uint8_t getrowsforlength(uint64_t length);
 class Word{
 private:
     std::string currentword;
