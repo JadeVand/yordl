@@ -18,14 +18,14 @@ void Actor::setuuid(char* uuid){
 }
 void Actor::openfile(){
     char filename[64] = {0};
-    strcat(filename,"leaguelplayers/");
+    strcat(filename,"yordles/");
     strcat(filename,uuid);
     f = fopen(filename,"r+");
     
 }
 void Actor::createfile(){
     char filename[64] = {0};
-    strcat(filename,"leaguelplayers/");
+    strcat(filename,"yordles/");
     strcat(filename,uuid);
     f = fopen(filename,"wb");
 }
