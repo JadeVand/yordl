@@ -14,7 +14,7 @@ bool Word::neednewword(time_t servertime,time_t now){
     time_t diff = now - servertime;
     diff/=SECONDS_IN_DAY;//this is our day, we check if this file currently exists, if not we make a new file with our new word
     
-    std::ifstream ifs("league-l-currentword.json");
+    std::ifstream ifs("yordl-currentword.json");
     assert(ifs.good());
     nlohmann::json jf = nlohmann::json::parse(ifs);
     ifs.close();
@@ -25,7 +25,7 @@ bool Word::neednewword(time_t servertime,time_t now){
     
     //read the history state
     
-    FILE* f = fopen("league-l-currentstate","rb");
+    FILE* f = fopen("yordl-currentstate","rb");
     assert(f);
     
     uint64_t attempt = 0;
@@ -36,7 +36,7 @@ bool Word::neednewword(time_t servertime,time_t now){
     
     
     //read the json history file so we can edit the attempts and success
-    std::ifstream ifhistory("league-l-history.json");
+    std::ifstream ifhistory("yordl-history.json");
     assert(ifhistory.good());
     nlohmann::json jshistory = nlohmann::json::parse(ifhistory);
     ifhistory.close();
@@ -65,7 +65,7 @@ bool Word::neednewword(time_t servertime,time_t now){
     return true;
 }
 void Word::sethistory(std::string currentword,std::string category,time_t day){
-    std::ifstream ifhistory("league-l-history.json");
+    std::ifstream ifhistory("yordl-history.json");
     assert(ifhistory.good());
     nlohmann::json jshistory = nlohmann::json::parse(ifhistory);
     ifhistory.close();
@@ -81,7 +81,7 @@ void Word::sethistory(std::string currentword,std::string category,time_t day){
     jshistory[currentword]["date"] = ltl.t;
     jshistory[currentword]["attempts"] = 0;
     jshistory[currentword]["successful"] = 0;
-    std::ofstream ofhistory("league-l-history.json");
+    std::ofstream ofhistory("yordl-history.json");
     assert(ofhistory.good());
     ofhistory << jshistory;
     ofhistory.close();
@@ -89,7 +89,7 @@ void Word::sethistory(std::string currentword,std::string category,time_t day){
 void Word::setcurrentword(std::string currentword,std::string category, time_t day){
     this->currentword.assign(currentword);
     this->category.assign(category);
-    std::ofstream ofs("league-l-currentword.json");
+    std::ofstream ofs("yordl-currentword.json");
     
     assert(ofs.good());
     
@@ -107,7 +107,7 @@ void Word::getnewword(time_t servertime,time_t now){
     std::string assignedcategory;
     time_t diff = now - servertime;
     diff/=SECONDS_IN_DAY;//this is our day, we check if this file currently exists, if not we make a new file with our new word
-    std::ifstream ifs("league-l-assignedword.json");
+    std::ifstream ifs("yordl-assignedword.json");
     assert(ifs.good());
     nlohmann::json jf = nlohmann::json::parse(ifs);
     ifs.close();
@@ -147,7 +147,7 @@ void Word::getnewword(time_t servertime,time_t now){
     
 }
 void Word::gethistory(std::vector<std::string>& vechistory){
-    std::ifstream ifshistory("league-l-history.json");
+    std::ifstream ifshistory("yordl-history.json");
     assert(ifshistory.good());
     nlohmann::json jf = nlohmann::json::parse(ifshistory);
     ifshistory.close();
@@ -161,7 +161,7 @@ void Word::getnewchampword(time_t day){
     
     //because nlohmann json doesn't support range based iterators I have to read each key into a vector
     //then deal with the randomness from the vector
-    std::ifstream ifs("league-l-champions.json");
+    std::ifstream ifs("yordl-champions.json");
     
     assert(ifs.good());
     
@@ -196,7 +196,7 @@ void Word::getnewabilityword(time_t day){
     //how do I pick a random ability from each key's value?
     
     
-    std::ifstream ifs("league-l-champions.json");
+    std::ifstream ifs("yordl-champions.json");
     nlohmann::json jf = nlohmann::json::parse(ifs);
     ifs.close();
     std::vector<std::string> vec;
@@ -233,7 +233,7 @@ const std::string& Word::getcategory(){
     return category;
 }
 void Word::incrementstateattempt(){
-    FILE* f = fopen("league-l-currentstate","rb+");
+    FILE* f = fopen("yordl-currentstate","rb+");
     assert(f);
     
     uint64_t attempt = 0;
@@ -245,7 +245,7 @@ void Word::incrementstateattempt(){
     fclose(f);
 }
 void Word::incrementstateattemptandsuccess(){
-    FILE* f = fopen("league-l-currentstate","rb+");
+    FILE* f = fopen("yordl-currentstate","rb+");
     assert(f);
 
     uint64_t attempt = 0;
