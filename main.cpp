@@ -152,22 +152,22 @@ int main()
 {
     
     //uuid4_init();
-    FILE* timestamp = fopen("league-l-timestamp","rb");
+    FILE* timestamp = fopen("yordl-timestamp","rb");
     if(timestamp){
         
         fread(&servertime,sizeof(servertime),1,timestamp);
         fclose(timestamp);
     }else{
-        timestamp = fopen("league-l-timestamp","wb");
+        timestamp = fopen("yordl-timestamp","wb");
         if(timestamp){
             servertime = time_since_epoch();
             fwrite(&servertime,sizeof(servertime),1,timestamp);
             fclose(timestamp);
         }
     }
-    FILE* currentstate = fopen("league-l-currentstate","rb");
+    FILE* currentstate = fopen("yordl-currentstate","rb");
     if(!currentstate){
-        currentstate = fopen("league-l-currentstate","wb");
+        currentstate = fopen("yordl-currentstate","wb");
         uint64_t attempt = 0;
         uint64_t success = 0;
         fwrite(&attempt,sizeof(uint64_t),0,currentstate);
