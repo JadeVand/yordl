@@ -39,11 +39,14 @@ public:
     void incrementstateattempt();
     void incrementstateattemptandsuccess();
     bool isvalidword(std::string s);
+    static void checkword(uint32_t* result,const std::string& guess,const std::string& correct);
+    static uint8_t getrowsforlength(uint64_t length);
 private:
 protected:
     void sethistory(std::string currentword,std::string category,time_t day);
     void getnewchampword(time_t day);
     void getnewabilityword(time_t day);
     void setcurrentword(std::string currentword,std::string category, time_t day);
+    static void mask(uint16_t* s, uintptr_t index);
 };
 #endif

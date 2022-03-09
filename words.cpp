@@ -1,7 +1,89 @@
 
 
 #include "words.h"
-uint8_t getrowsforlength(uint64_t length){
+
+Word::Word(URand* ur){
+    this->ur = ur;
+}
+Word::~Word(){
+    
+}
+void Word::mask(uint16_t* s, uintptr_t index){
+    switch(index){
+        case 0:
+            *s^=1;
+            break;
+        case 1:
+            *s^=2;
+            break;
+        case 2:
+            *s^=4;
+            break;
+        case 3:
+            *s^=8;
+            break;
+        case 4:
+            *s^=0x10;
+            break;
+        case 5:
+            *s^=0x20;
+            break;
+        case 6:
+            *s^=0x40;
+            break;
+        case 7:
+            *s^=0x80;
+            break;
+        case 8:
+            *s^=0x100;
+            break;
+        case 9:
+            *s^=0x200;
+            break;
+        case 10:
+            *s^=0x400;
+            break;
+        case 11:
+            *s^=0x800;
+            break;
+        case 12:
+            *s^=0x1000;
+            break;
+        case 13:
+            *s^=0x2000;
+            break;
+        case 14:
+            *s^=0x4000;
+            break;
+        case 15:
+            *s^=0x8000;
+            break;
+    }
+}
+void Word::checkword(uint32_t* result,const std::string& guess,const std::string& correct){
+    if(guess.length()!=correct.length()){
+        return;
+    }
+    size_t s = guess.length();
+    uint16_t high = 0;
+    uint16_t low = 0;
+    for(uintptr_t index = 0; index < s; ++index){
+        
+        if(guess[index]==correct[index]){
+            mask(&high,index);
+            mask(&low,index);
+        }else{
+            if(correct.find(guess[index])!=std::string::npos){
+                mask(&low,index);
+            }
+        }
+    }
+    *result|=high<<16;
+    *result|=low;
+}
+uint8_t Word::getrowsforlength(uint64_t length){
+    if(length < 3)
+        return 0;
     if(length<5)
         return 3;
     if(length<8)
@@ -10,12 +92,7 @@ uint8_t getrowsforlength(uint64_t length){
         return 7;
     if(length<17)
         return 8;
-}
-Word::Word(URand* ur){
-    this->ur = ur;
-}
-Word::~Word(){
-    
+    return 0;
 }
 bool Word::isvalidword(std::string s){
     std::ifstream ifs("yordl-champions.json");

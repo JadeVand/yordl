@@ -59,7 +59,6 @@ void checkword(uint32_t* result,const std::string& guess,const std::string& corr
     if(guess.length()!=correct.length()){
         return;
     }
-    printf("lengths are equal\n");
     size_t s = guess.length();
     uint16_t high = 0;
     uint16_t low = 0;
@@ -76,8 +75,6 @@ void checkword(uint32_t* result,const std::string& guess,const std::string& corr
     }
     *result|=high<<16;
     *result|=low;
-    printf("%d %d\n",high,low);
-    
 }
 void checkresult(uint32_t result){
     uint16_t low = result&0xFFFF;
