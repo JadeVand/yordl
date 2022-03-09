@@ -123,13 +123,21 @@ bool Word::neednewword(time_t servertime,time_t now){
     diff/=SECONDS_IN_DAY;//this is our day, we check if this file currently exists, if not we make a new file with our new word
     
     std::ifstream ifs("yordl-currentword.json");
-    assert(ifs.good());
-    nlohmann::json jf = nlohmann::json::parse(ifs);
-    ifs.close();
-    time_t day = jf.at("day");
-    if(diff==day){
-        return false;
+    if(ifs.good()){
+        nlohmann::json jf = nlohmann::json::parse(ifs);
+        ifs.close();
+        time_t day = 0;
+        try{
+             day = jf.at("day");
+        }catch(nlohmann::json::exception& e){
+            std::cerr << __FILE__ << ":"<< __LINE__ << std::endl;
+        }
+        
+        if(diff==day){
+            return false;
+        }
     }
+    
     
     //read the history state
     
@@ -202,9 +210,10 @@ void Word::setcurrentword(std::string currentword,std::string category, time_t d
     assert(ofs.good());
     
     nlohmann::json j ;
-    j[currentword] = nlohmann::json::object();
-    j[currentword]["category"] = category;
-    j[currentword]["day"] = day;
+    //j[currentword] = nlohmann::json::object();
+    j["word"] = currentword;
+    j["category"] = category;
+    j["day"] = day;
     ofs << j;
     ofs.close();
 }
@@ -221,9 +230,22 @@ void Word::getnewword(time_t servertime,time_t now){
     ifs.close();
     for (auto& [key, val] : jf.items())
     {
-        time_t day = val.at("day");
+        time_t day = 0;
+        try{
+            day = val.at("day");
+        }catch(nlohmann::json::exception& e){
+            std::cerr << __FILE__ << ":"<< __LINE__ << std::endl;
+        }
+        
+        
         if(day==diff){
-            std::string c = val.at("category");
+            std::string c;
+            try{
+                c = val.at("category");
+            }
+            catch(nlohmann::json::exception& e){
+                std::cerr << __FILE__ << ":"<< __LINE__ << std::endl;
+            }
             assert(!c.empty());
             
             assignedword.assign(key);

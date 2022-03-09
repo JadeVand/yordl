@@ -1,8 +1,1 @@
-{
-    "NULL":{
-        "day":0,
-        "date":0,
-        "attempts":0,
-        "successful":0
-    }
-}
+{"Akali":{"attempts":0,"date":132514313,"day":0,"successful":0},"NULL":{"attempts":0,"date":0,"day":0,"successful":0},"category":"champion"}
