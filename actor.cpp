@@ -20,7 +20,7 @@ void Actor::openfile(){
     char filename[64] = {0};
     strcat(filename,"yordles/");
     strcat(filename,uuid);
-    f = fopen(filename,"r+");
+    f = fopen(filename,"rb+");
     
 }
 void Actor::createfile(){
@@ -28,6 +28,11 @@ void Actor::createfile(){
     strcat(filename,"yordles/");
     strcat(filename,uuid);
     f = fopen(filename,"wb");
+    assert(f);
+    writeheader();
+    fclose(f);
+    f = fopen(filename,"rb+");
+    assert(f);
 }
 bool Actor::fileexists(){
     if(f){

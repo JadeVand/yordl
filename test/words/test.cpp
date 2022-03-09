@@ -1,5 +1,6 @@
 
 #include <urand.h>
+#include <actor.h>
 #include <iostream>
 #include <string.h>
 void mask(uint16_t* s, uint8_t index){
@@ -109,13 +110,8 @@ int main(){
 */
     
     URand ur;
-    union Uid128u u = {0};
-    ur.getu128rand(&u);
-    for(int i = 0; i < 16; ++i){
-        printf("%02x",u.b[i]);
-    }
-    char c[33] = {0};
-    ur.getu128string(&u,c);
-    printf("\n%s\n",c);
+    Actor a(nullptr,&ur);
+    a.makeuuid();
+    a.createfile();
     return 0;
 }
