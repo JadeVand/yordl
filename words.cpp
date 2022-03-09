@@ -17,6 +17,28 @@ Word::Word(URand* ur){
 Word::~Word(){
     
 }
+bool Word::isvalidword(std::string s){
+    std::ifstream ifs("yordl-champions.json");
+    nlohmann::json jf = nlohmann::json::parse(ifs);
+    ifs.close();
+    bool found = false;
+    std::vector<std::string> vec;
+    
+    for (auto& [key, val] : jf.items())
+    {
+        if(!s.compare(key)){
+            found = true;
+            break;
+        }
+        for(auto& [k,v]:val.items()){
+            if(!s.compare(v)){
+                found = true;
+                break;
+            }
+        }
+    }
+    return found;
+}
 #define SECONDS_IN_DAY 86400
 bool Word::neednewword(time_t servertime,time_t now){
     
@@ -193,7 +215,7 @@ void Word::getnewchampword(time_t day){
     for(auto& k : vechistory){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
     }
-    uint32_t r = ur->getu32rand();
+    uint32_t r = ur->getu16rand();
     r%=vec.size();
     std::string assignedword = vec.at(r);
     std::string assignedcategory = "champion";
@@ -225,7 +247,7 @@ void Word::getnewabilityword(time_t day){
     for(auto& k : vechistory){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
     }
-    uint32_t r = ur->getu32rand();
+    uint32_t r = ur->getu16rand();
     r%=vec.size();
     
     std::string assignedword = vec.at(r);

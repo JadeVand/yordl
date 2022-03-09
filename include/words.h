@@ -38,6 +38,7 @@ public:
     void gethistory(std::vector<std::string>& vechistory);
     void incrementstateattempt();
     void incrementstateattemptandsuccess();
+    bool isvalidword(std::string s);
 private:
 protected:
     void sethistory(std::string currentword,std::string category,time_t day);

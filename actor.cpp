@@ -2,7 +2,7 @@
 Actor::Actor(uWS::WebSocket<true,true,PerSocketData>* connection,URand* ur){
     this->connection = connection;
     this->ur = ur;
-    memset(uuid,0,UUID4_LEN);
+    memset(uuid,0,UID128LENGTH);
     f = nullptr;
     memset(&header,0,sizeof(struct PlayerHeader));
 }
@@ -14,7 +14,7 @@ uWS::WebSocket<true,true,PerSocketData>* Actor::getconnection(){
     return connection;
 }
 void Actor::setuuid(char* uuid){
-    memcpy(this->uuid,uuid,UUID4_LEN);
+    memcpy(this->uuid,uuid,UID128LENGTH);
 }
 void Actor::openfile(){
     char filename[64] = {0};
@@ -71,12 +71,10 @@ void Actor::writeheader(){
     }
 }
 void Actor::makeuuid(){
-    union Uuidv4u u;
-    ur->uuid4_makeword(&u);
-    ur->uuid4_makestring(&u,uuid);
-    //uuid4_makeword(&u);
-    //uuid4_makestring(&u,uuid);
-    memcpy(&header.uuid,&u.u,sizeof(struct Uuidv4));
+    union Uid128u u;
+    ur->getu128rand(&u);
+    memcpy(&header.uuid,&u.u,sizeof(struct Uid128));
+    ur->uid128makestring(&u,uuid);
 }
 char* Actor::getuuid(){
     return uuid;

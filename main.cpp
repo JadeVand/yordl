@@ -61,8 +61,8 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 actor->getconnection()->send(senduuidpacket.dump(),uWS::OpCode::TEXT,true);
                 actor->createfile();
             }else{
-                char selfuuid[UUID4_LEN] = {0};
-                memcpy(selfuuid, selfid.c_str(), UUID4_LEN);
+                char selfuuid[UID128LENGTH] = {0};
+                memcpy(selfuuid, selfid.c_str(), UID128LENGTH);
                 actor->setuuid(selfuuid);
                 actor->openfile();
                 //uuid file should exist but in the case it doesn't just do it?
@@ -84,7 +84,16 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             {
                 return;
             }
-            
+            nlohmann::json out ;
+            out["pid"] = Identifiers::kGuess;
+            if(!wordle.isvalidword(letter)){
+                
+                
+                out["valid"] = false;
+                actor->getconnection()->send(out.dump().c_str(),uWS::OpCode::TEXT,true);
+            }else{
+                out["valud"] = true;
+            }
         }
             break;
         case Identifiers::kStatsForUuid:{
