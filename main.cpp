@@ -133,7 +133,6 @@ void ServerInstance::onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std:
 {
     
     std::string payload(message);
-    
     nlohmann::json packet;
     try
     {
@@ -143,7 +142,6 @@ void ServerInstance::onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std:
     {
         return;
     }
-    
     uint32_t packettype = 0;
     try
     {
@@ -153,7 +151,6 @@ void ServerInstance::onmessage(uWS::WebSocket<true,true,PerSocketData>* ws, std:
     {
         return;
     }
-    
     std::shared_ptr<Actor> actor = ((Actor*)ws->getUserData()->data)->shared_from_this();
     
     packethandler(actor, packettype, payload,packet);
