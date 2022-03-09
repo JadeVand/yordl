@@ -99,15 +99,23 @@ void checkresult(uint32_t result){
     //correct
 }
 int main(){
+    /*
     std::string correct = "hello";
     std::string input = "ahleo";
     uint32_t result = 0;
     checkword(&result,input,correct);
    // printf("%X\n",result);
     checkresult(result);
+*/
     
-   uint32_t seconds_since_epoch = (uint32_t) std::chrono::duration_cast<std::chrono::seconds>
-            (std::chrono::system_clock::now().time_since_epoch()).count();
-    
+    URand ur;
+    union Uid128u u = {0};
+    ur.getu128rand(&u);
+    for(int i = 0; i < 16; ++i){
+        printf("%02x",u.b[i]);
+    }
+    char c[33] = {0};
+    ur.getu128string(&u,c);
+    printf("\n%s\n",c);
     return 0;
 }

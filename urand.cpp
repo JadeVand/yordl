@@ -18,6 +18,8 @@ void URand::getu128rand(union Uid128u* u){
     u->u.low = getu64rand();
 }
 
-void URand::uid128makestring( union Uid128u* u,char* str){
-    
+void URand::getu128string( union Uid128u* u,char* str){
+    for(uint64_t index = 0; index < sizeof(struct Uid128); ++index){
+        str += sprintf(str,"%02x",u->b[index]);
+    }
 }

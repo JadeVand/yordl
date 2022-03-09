@@ -1,7 +1,7 @@
 #ifndef _urand_h
 #define _urand_h
 #include <random>
-#define UID128LENGTH 17
+#define UID128LENGTH 33
 struct Uid128{
     uint64_t high;
     uint64_t low;
@@ -18,7 +18,7 @@ public:
     uint16_t getu16rand();
     void getu128rand(union Uid128u* u);
     uint64_t getu64rand();
-    void uid128makestring( union Uid128u* u,char* str);
+    void getu128string( union Uid128u* u,char* str);
 private:
 };
 

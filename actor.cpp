@@ -74,7 +74,7 @@ void Actor::makeuuid(){
     union Uid128u u;
     ur->getu128rand(&u);
     memcpy(&header.uuid,&u.u,sizeof(struct Uid128));
-    ur->uid128makestring(&u,uuid);
+    ur->getu128string(&u,uuid);
 }
 char* Actor::getuuid(){
     return uuid;
