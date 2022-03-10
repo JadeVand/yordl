@@ -3,6 +3,7 @@
 #include <actor.h>
 #include <iostream>
 #include <string.h>
+
 void mask(uint16_t* s, uint8_t index){
     switch(index){
         case 0:
@@ -96,19 +97,30 @@ void checkresult(uint32_t result){
     //acceptable
     //correct
 }
+time_t time_since_epoch()
+{
+    auto now = std::chrono::system_clock::now();
+    return std::chrono::system_clock::to_time_t( now );
+}
 int main(){
-    /*
-    std::string correct = "hello";
-    std::string input = "ahleo";
-    uint32_t result = 0;
-    checkword(&result,input,correct);
-   // printf("%X\n",result);
-    checkresult(result);
-*/
-    
-    URand ur;
-    Actor a(nullptr,&ur);
-    a.makeuuid();
-    a.createfile();
+    time_t timestamp = time_since_epoch();
+    FILE* f = fopen("timestamp","rb");
+    if(f){
+        printf("reading timestamp\n");
+        fread(&timestamp,sizeof(time_t),1,f);
+        fclose(f);
+    }else{
+        f = fopen("timestamp","wb");
+        assert(f);
+        fwrite(&timestamp,sizeof(time_t),1,f);
+        fclose(f);
+        printf("creating timestamp");
+    }
+    URand ur ;
+    Word wordle(&ur);
+    if(wordle.neednewword(timestamp,time_since_epoch()+(86400*2))){
+        std::cout << "we need new word" << std::endl;
+        wordle.getnewword(timestamp,time_since_epoch()+(86400*2));
+    }
     return 0;
 }

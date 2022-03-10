@@ -4,6 +4,17 @@
 
 Word::Word(URand* ur){
     this->ur = ur;
+    std::ifstream ifs("yordl-currentword.json");
+    if(ifs.good()){
+        try{
+            nlohmann::json j = nlohmann::json::parse(ifs);
+            currentword.assign(j.at("word"));
+            category.assign(j.at("category"));
+        }catch(nlohmann::json::exception& e){
+            assert(0);
+        }
+        ifs.close();
+    }
 }
 Word::~Word(){
     
@@ -130,25 +141,30 @@ bool Word::neednewword(time_t servertime,time_t now){
         try{
              day = jf.at("day");
         }catch(nlohmann::json::exception& e){
-            std::cerr << __FILE__ << ":"<< __LINE__ << std::endl;
+            assert(0);
         }
         
         if(diff==day){
             return false;
         }
+    }else{
+        return true;
+        
     }
     
     
     //read the history state
     
-    FILE* f = fopen("yordl-currentstate","rb");
-    assert(f);
-    
+    FILE* f = fopen("yordl-currentstate","r+");
     uint64_t attempt = 0;
     uint64_t success = 0;
-    fread(&attempt,sizeof(uint64_t),1,f);
-    fread(&success,sizeof(uint64_t),1,f);
-    
+    if(!f){
+        f = fopen("yordl-currentstate","wb");
+        assert(f);
+    }else{
+        fread(&attempt,sizeof(uint64_t),1,f);
+        fread(&success,sizeof(uint64_t),1,f);
+    }
     
     
     //read the json history file so we can edit the attempts and success
@@ -162,7 +178,7 @@ bool Word::neednewword(time_t servertime,time_t now){
     jshistory[currentword]["successful"] = success;
     
     //rewrite history to file
-    std::ofstream ofhistory;
+    std::ofstream ofhistory("yordl-history.json");
     assert(ofhistory.good());
     ofhistory << jshistory;
     ofhistory.close();
@@ -182,9 +198,12 @@ bool Word::neednewword(time_t servertime,time_t now){
 }
 void Word::sethistory(std::string currentword,std::string category,time_t day){
     std::ifstream ifhistory("yordl-history.json");
-    assert(ifhistory.good());
-    nlohmann::json jshistory = nlohmann::json::parse(ifhistory);
-    ifhistory.close();
+    nlohmann::json jshistory;
+    if(ifhistory.good()){
+        jshistory = nlohmann::json::parse(ifhistory);
+        ifhistory.close();
+    }
+    
     std::time_t t = std::time(nullptr);
     std::tm *const pTInfo = std::localtime(&t);
     union LeagueLTime ltl = {0};
@@ -225,40 +244,41 @@ void Word::getnewword(time_t servertime,time_t now){
     time_t diff = now - servertime;
     diff/=SECONDS_IN_DAY;//this is our day, we check if this file currently exists, if not we make a new file with our new word
     std::ifstream ifs("yordl-assignedword.json");
-    assert(ifs.good());
-    nlohmann::json jf = nlohmann::json::parse(ifs);
-    ifs.close();
-    for (auto& [key, val] : jf.items())
-    {
-        time_t day = 0;
-        try{
-            day = val.at("day");
-        }catch(nlohmann::json::exception& e){
-            std::cerr << __FILE__ << ":"<< __LINE__ << std::endl;
-        }
-        
-        
-        if(day==diff){
-            std::string c;
+    if(ifs.good()){
+        nlohmann::json jf = nlohmann::json::parse(ifs);
+        ifs.close();
+        for (auto& [key, val] : jf.items())
+        {
+            time_t day = 0;
             try{
-                c = val.at("category");
+                day = val.at("day");
+            }catch(nlohmann::json::exception& e){
+                assert(0);
             }
-            catch(nlohmann::json::exception& e){
-                std::cerr << __FILE__ << ":"<< __LINE__ << std::endl;
-            }
-            assert(!c.empty());
             
-            assignedword.assign(key);
-            assignedcategory.assign(c);
-            break;
+            
+            if(day==diff){
+                std::string c;
+                try{
+                    c = val.at("category");
+                }
+                catch(nlohmann::json::exception& e){
+                    assert(0);
+                }
+                assert(!c.empty());
+                
+                assignedword.assign(key);
+                assignedcategory.assign(c);
+                break;
+            }
         }
     }
+    
     if(!assignedword.empty()){
         setcurrentword(assignedword,assignedcategory,diff);
         sethistory(currentword,category,diff);
         return;
     }
-    
     
     uint8_t r = 0;
     FILE* f = fopen("/dev/urandom","rb");
@@ -266,6 +286,7 @@ void Word::getnewword(time_t servertime,time_t now){
         fread(&r,sizeof(uint8_t),1,f);
         fclose(f);
     }
+    r%=2;
     switch(r){
         case 0://champ
             getnewchampword(diff);
@@ -278,13 +299,15 @@ void Word::getnewword(time_t servertime,time_t now){
 }
 void Word::gethistory(std::vector<std::string>& vechistory){
     std::ifstream ifshistory("yordl-history.json");
-    assert(ifshistory.good());
-    nlohmann::json jf = nlohmann::json::parse(ifshistory);
-    ifshistory.close();
-    
-    for(auto& [key,val] : jf.items()){
-        vechistory.push_back(key);
+    if(ifshistory.good()){
+        nlohmann::json jf = nlohmann::json::parse(ifshistory);
+        ifshistory.close();
+        
+        for(auto& [key,val] : jf.items()){
+            vechistory.push_back(key);
+        }
     }
+    
 }
 void Word::getnewchampword(time_t day){
     //how do I pick a random key from the json file?
