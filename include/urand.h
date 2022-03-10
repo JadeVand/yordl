@@ -19,6 +19,8 @@ public:
     void getu128rand(union Uid128u* u);
     uint64_t getu64rand();
     void getu128string( union Uid128u* u,char* str);
+    static uint32_t get32high(uint64_t v);
+    static uint32_t get32low(uint64_t v);
 private:
 };
 

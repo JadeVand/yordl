@@ -23,3 +23,10 @@ void URand::getu128string( union Uid128u* u,char* str){
         str += sprintf(str,"%02x",u->b[index]);
     }
 }
+
+uint32_t URand::get32high(uint64_t v){
+    return (v>>32)&0x00000000FFFFFFFF;
+}
+uint32_t URand::get32low(uint64_t v){
+    return v&0x00000000FFFFFFFF;
+}
