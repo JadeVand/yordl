@@ -1,4 +1,4 @@
-OBJFILES = test.o ../../urand.o ../../actor.o ../../words.o
+OBJFILES = test.o ../../urand.o ../../actor.o ../../words.o ../../blowfish.c
 TARGET = test
 CXXFLAGS = -std=c++17 -I../../json/include -I../../include -I../../uWebSockets/src -I../../uSockets/src
 LDFLAGS =

@@ -112,6 +112,11 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             struct PlayerHeader header = {0};
             fread(&header,sizeof(struct PlayerHeader),1,f);
             fclose(f);
+            nlohmann::json stats;
+            stats["score"] = header.score;
+            stats["current"] = header.currenstreak;
+            stats["max"] = header.maxstreak;
+            actor->getconnection()->send(stats.dump().c_str(),uWS::OpCode::TEXT,true);
         }
             break;
         default:

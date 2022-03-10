@@ -1,0 +1,8 @@
+How do we secure against users simply changing their UID in local storage 
+
+Use blowfish to encrypt the UID with a 64bit key
+Store the original UID in local storage
+Store the encrypted UID in local storage
+Display the original version in HTML and allow users to share it for stats
+Unorthodoxically (that's not a word ) the encrypted version shouldn't be shared
+This is because decrypting/encrypting is a resourceful operation, if we shared the encrypted version then the server would constantly need to decrypt for stats. If the original is shared instead no encryption/decryption is necessary however when a user first connects, their key encrypted key can be pulled from local storage and a one time decryption can be performed to link the user to their data

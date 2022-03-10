@@ -1,4 +1,4 @@
-OBJFILES = main.o actor.o uSockets/*.o words.o urand.o
+OBJFILES = main.o actor.o uSockets/*.o words.o urand.o blowfish.c
 TARGET = yordl
 CXXFLAGS = -Iopenssl/include -Izlib -Ijson/include -IuWebSockets/src -IuSockets/src -lpthread -Wpedantic -Wall -Wextra -Wsign-conversion -Wconversion -std=c++17 -Ideps/include -Ideps/uSockets/src -Iinclude -g
 LDFLAGS = -Lopenssl -Lzlib -lstdc++ -lssl -lcrypto -lz
