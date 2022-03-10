@@ -54,3 +54,9 @@ protected:
     static void mask(uint16_t* s, uintptr_t index);
 };
 #endif
+
+Twitch streamer fanfan
+began streaming october 20 /2020
+Currently averages like 400 veiewers
+will likely get discovered by OTV&company maybe through boxbox because he's a simp for asian girls
+her view count will skyrocket in less than a year

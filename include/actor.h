@@ -14,7 +14,9 @@ enum class Identifiers : uint32_t
 };
 struct PlayerHeader{
     struct Uid128 uuid;
-    uint64_t score;
+    uint32_t score;
+    uint16_t currenstreak;
+    uint16_t maxstreak;
     char progress[128];
 };
 

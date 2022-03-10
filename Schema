@@ -9,7 +9,9 @@ Player
 	Header{
 		u64:high
 		u64:low
-		u64:score
+		u32:score
+		u16:current streak
+		u16:max streak
 		b128:current path
 	}size:152
 	
