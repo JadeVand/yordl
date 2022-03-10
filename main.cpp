@@ -97,7 +97,21 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
         }
             break;
         case Identifiers::kStatsForUuid:{
-            
+            std::string uid;
+            try{
+                uid = packet.at("uid");
+            }catch(nlohmann::json::exception& e){
+                return;
+            }
+            std::string path ="yordles/";
+            path.append(uid);
+            FILE* f = fopen(path.c_str(),"rb");
+            if(!f){
+                return;
+            }
+            struct PlayerHeader header = {0};
+            fread(&header,sizeof(struct PlayerHeader),1,f);
+            fclose(f);
         }
             break;
         default:
