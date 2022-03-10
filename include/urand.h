@@ -21,6 +21,7 @@ public:
     void getu128string( union Uid128u* u,char* str);
     static uint32_t get32high(uint64_t v);
     static uint32_t get32low(uint64_t v);
+    static uint64_t makeu64(uint32_t high,uint32_t low);
 private:
 };
 

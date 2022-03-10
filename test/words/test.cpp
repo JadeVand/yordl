@@ -17,7 +17,21 @@ int main(){
     uint32_t hlow = URand::get32low(u.u.high);
     uint32_t lhigh = URand::get32high(u.u.low);
     uint32_t llow = URand::get32low(u.u.low);
-    printf("%llx %llx\n",u.u.high,u.u.low);
-    printf("%08x%08x %08x%08x\n",hhigh,hlow,lhigh,llow);
+    printf("%llx%llx\n",u.u.high,u.u.low);
+    printf("%08x%08x%08x%08x\n",hhigh,hlow,lhigh,llow);
+    Blowfish_Encrypt(&bctx,&hhigh,&hlow);
+    Blowfish_Encrypt(&bctx,&lhigh,&llow);
+    uint64_t mu64h = URand::makeu64(hhigh,hlow);
+    uint64_t mu64l = URand::makeu64(lhigh,llow);
+    printf("%llx%llx\n",mu64h,mu64l);
+    printf("%08x%08x%08x%08x\n",hhigh,hlow,lhigh,llow);
+    Blowfish_Decrypt(&bctx,&hhigh,&hlow);
+    Blowfish_Decrypt(&bctx,&lhigh,&llow);
+    mu64h = URand::makeu64(hhigh,hlow);
+    mu64l = URand::makeu64(lhigh,llow);
+    assert(u.u.high==mu64h);
+    assert(u.u.low==mu64l);
+    printf("%llx%llx\n",u.u.high,u.u.low);
+    printf("%llx%llx\n",mu64h,mu64l);
     return 0;
 }

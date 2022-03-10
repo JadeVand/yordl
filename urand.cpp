@@ -30,3 +30,9 @@ uint32_t URand::get32high(uint64_t v){
 uint32_t URand::get32low(uint64_t v){
     return v&0x00000000FFFFFFFF;
 }
+uint64_t URand::makeu64(uint32_t high, uint32_t low){
+    uint64_t v = 0;
+    v = (v | high) << 32;
+    v |= low;
+    return v;
+}
