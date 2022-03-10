@@ -71,26 +71,46 @@ void Word::mask(uint16_t* s, uintptr_t index){
             break;
     }
 }
-void Word::checkword(uint32_t* result,const std::string& guess,const std::string& correct){
+WordValidation Word::checkword(uint32_t* result,const std::string& guess,const std::string& correct){
+    
     if(guess.length()!=correct.length()){
-        return;
+        return WordValidation::kWordBadLength;
     }
+    
+    //check if word exists
+    //if(!wordexists())
+    //  return WordValidation::kWordNonExist
+    std::string temp = correct;
     size_t s = guess.length();
     uint16_t high = 0;
     uint16_t low = 0;
-    for(uintptr_t index = 0; index < s; ++index){
-        
-        if(guess[index]==correct[index]){
-            mask(&high,index);
-            mask(&low,index);
-        }else{
-            if(correct.find(guess[index])!=std::string::npos){
-                mask(&low,index);
+    std::string res(s,'0');
+    
+    for(size_t index = 0; index < s; ++index){
+        for(size_t inner = 0; inner < s; ++inner){
+            if(guess[index]==temp[inner]){
+                res.insert(index,sizeof(char),guess[index]);
+                temp[inner] = 0;
+                
+                break;
             }
         }
     }
+    std::cout << res << std::endl;
+    for(size_t index = 0; index < res.length(); ++index){
+        if(res[index]==correct[index]){
+            mask(&high,index);
+        }else if(res[index]=='0'){
+            
+        }else{
+            mask(&low,index);
+        }
+    }
+    
     *result|=high<<16;
     *result|=low;
+    
+    return WordValidation::kWordOk;
 }
 uint8_t Word::getrowsforlength(uint64_t length){
     if(length < 3)

@@ -7,7 +7,11 @@
 #include <string>
 #include <fstream>
 #define LEAGUE_WORD_LENGTH 16
-
+enum class WordValidation : uint32_t{
+    kWordOk,
+    kWordBadLength,
+    kWordNonExist
+};
 union LeagueLTime{
     uint32_t t;
     struct Parts{
@@ -39,7 +43,7 @@ public:
     void incrementstateattempt();
     void incrementstateattemptandsuccess();
     bool isvalidword(std::string s);
-    static void checkword(uint32_t* result,const std::string& guess,const std::string& correct);
+    static WordValidation checkword(uint32_t* result,const std::string& guess,const std::string& correct);
     static uint8_t getrowsforlength(uint64_t length);
 private:
 protected:

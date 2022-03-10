@@ -56,26 +56,71 @@ void mask(uint16_t* s, uint8_t index){
             break;
     }
 }
-void checkword(uint32_t* result,const std::string& guess,const std::string& correct){
-    if(guess.length()!=correct.length()){
+enum class WordValidation : uint32_t{
+    kWordOk,
+    kWordBadLength,
+    kWordNonExist
+};
+void foo(const std::string& one,const std::string& two){
+    if(one.length()!=two.length()){
         return;
     }
-    size_t s = guess.length();
-    uint16_t high = 0;
-    uint16_t low = 0;
+    size_t s = one.length();
+    std::string temp = two;
+    std::string res ;
+    
     for(size_t index = 0; index < s; ++index){
-        
-        if(guess[index]==correct[index]){
-            mask(&high,index);
-            mask(&low,index);
-        }else{
-            if(correct.find(guess[index])!=std::string::npos){
-                mask(&low,index);
+        for(size_t inner = 0; inner < s; ++inner){
+            if(one[index]==temp[inner]){
+                res.insert(index,sizeof(char),one[index]);
+                temp[inner] = 0;
+                
+                break;
             }
         }
     }
+}
+WordValidation checkword(uint32_t* result,const std::string& guess,const std::string& correct){
+    
+    if(guess.length()!=correct.length()){
+        return WordValidation::kWordBadLength;
+    }
+    
+    //check if word exists
+    //if(!wordexists())
+    //  return WordValidation::kWordNonExist
+    printf("%ld %d\n",guess.length(),correct.length());
+    std::string temp = correct;
+    size_t s = guess.length();
+    uint16_t high = 0;
+    uint16_t low = 0;
+    std::string res(s,'0');
+    
+    for(size_t index = 0; index < s; ++index){
+        for(size_t inner = 0; inner < s; ++inner){
+            if(guess[index]==temp[inner]){
+                res.insert(index,sizeof(char),guess[index]);
+                temp[inner] = 0;
+                
+                break;
+            }
+        }
+    }
+    std::cout << res << std::endl;
+    for(size_t index = 0; index < res.length(); ++index){
+        if(res[index]==correct[index]){
+            mask(&high,index);
+        }else if(res[index]=='0'){
+            
+        }else{
+            mask(&low,index);
+        }
+    }
+    
     *result|=high<<16;
     *result|=low;
+    
+    return WordValidation::kWordOk;
 }
 void checkresult(uint32_t result){
     uint16_t low = result&0xFFFF;
@@ -118,9 +163,18 @@ int main(){
     }
     URand ur ;
     Word wordle(&ur);
-    if(wordle.neednewword(timestamp,time_since_epoch()+(86400*3))){
+    if(wordle.neednewword(timestamp,time_since_epoch()+(86400*0))){
         std::cout << "we need new word" << std::endl;
-        wordle.getnewword(timestamp,time_since_epoch()+(86400*3));
+        wordle.getnewword(timestamp,time_since_epoch()+(86400*0));
     }
+    std::string one;
+    std::cin >> one;
+    std::string two;
+    std::cin >> two;
+    
+    uint32_t result = 0;
+    WordValidation valid = checkword(&result,one,two);
+    checkresult(result);
+
     return 0;
 }
