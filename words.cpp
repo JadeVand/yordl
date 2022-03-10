@@ -280,12 +280,7 @@ void Word::getnewword(time_t servertime,time_t now){
         return;
     }
     
-    uint8_t r = 0;
-    FILE* f = fopen("/dev/urandom","rb");
-    if(f){
-        fread(&r,sizeof(uint8_t),1,f);
-        fclose(f);
-    }
+    uint16_t r = ur->getu16rand();
     r%=2;
     switch(r){
         case 0://champ
@@ -337,7 +332,7 @@ void Word::getnewchampword(time_t day){
     for(auto& k : vechistory){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
     }
-    uint32_t r = ur->getu16rand();
+    uint16_t r = ur->getu16rand();
     r%=vec.size();
     std::string assignedword = vec.at(r);
     std::string assignedcategory = "champion";
@@ -369,7 +364,7 @@ void Word::getnewabilityword(time_t day){
     for(auto& k : vechistory){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
     }
-    uint32_t r = ur->getu16rand();
+    uint16_t r = ur->getu16rand();
     r%=vec.size();
     
     std::string assignedword = vec.at(r);

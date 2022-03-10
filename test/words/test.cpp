@@ -118,9 +118,9 @@ int main(){
     }
     URand ur ;
     Word wordle(&ur);
-    if(wordle.neednewword(timestamp,time_since_epoch()+(86400*2))){
+    if(wordle.neednewword(timestamp,time_since_epoch()+(86400*3))){
         std::cout << "we need new word" << std::endl;
-        wordle.getnewword(timestamp,time_since_epoch()+(86400*2));
+        wordle.getnewword(timestamp,time_since_epoch()+(86400*3));
     }
     return 0;
 }
