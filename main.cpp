@@ -54,23 +54,20 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 return;
             }
             if(!selfid.compare("null")){
+                //make uid
+                //encrypt uid
+                //send private-uid(encrypted) and public uid
                 actor->makeuuid();
                 nlohmann::json senduuidpacket;
                 senduuidpacket["pid"] = Identifiers::kMyId;
-                senduuidpacket["uidprivate"] = actor->getuuid();
+               // senduuidpacket["uidpublic"] = actor->getuuid();
+                
                 actor->getconnection()->send(senduuidpacket.dump(),uWS::OpCode::TEXT,true);
-                actor->createfile();
             }else{
-                char selfuuid[UID128LENGTH] = {0};
-                memcpy(selfuuid, selfid.c_str(), UID128LENGTH);
-                actor->setuuid(selfuuid);
-                actor->openfile();
-                //uuid file should exist but in the case it doesn't just do it?
-                /*
-                 if(!actor->fileexists()){
-                    actor->createfile();
-                }
-                 */
+                //decrypt uid
+                //open file
+                //read header
+                
             }
         }
             break;

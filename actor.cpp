@@ -2,9 +2,11 @@
 Actor::Actor(uWS::WebSocket<true,true,PerSocketData>* connection,URand* ur){
     this->connection = connection;
     this->ur = ur;
-    memset(uuid,0,UID128LENGTH);
-    f = nullptr;
-    memset(&header,0,sizeof(struct PlayerHeader));
+    memset(&decryptuid,0,sizeof(union Uid128u));
+    memset(&encryptuid,0,sizeof(union Uid128u));
+}
+Actor::~Actor(){
+
 }
 uint64_t Actor::getid()
 {
@@ -13,77 +15,21 @@ uint64_t Actor::getid()
 uWS::WebSocket<true,true,PerSocketData>* Actor::getconnection(){
     return connection;
 }
-void Actor::setuuid(char* uuid){
-    memcpy(this->uuid,uuid,UID128LENGTH);
+
+void Actor::readheader(struct PlayerHeader* header){
+
 }
-void Actor::openfile(){
-    char filename[64] = {0};
-    strcat(filename,"yordles/");
-    strcat(filename,uuid);
-    f = fopen(filename,"rb+");
-    
-}
-void Actor::createfile(){
-    char filename[64] = {0};
-    strcat(filename,"yordles/");
-    strcat(filename,uuid);
-    f = fopen(filename,"wb");
-    assert(f);
-    writeheader();
-    fclose(f);
-    f = fopen(filename,"rb+");
-    assert(f);
-}
-bool Actor::fileexists(){
-    if(f){
-        return true;
-    }
-    return false;
-}
-void Actor::readheader(){
-    if(f){
-        setfileoffsetfrombeg(0);
-        fread(&header,sizeof(struct PlayerHeader),1,f);
-    }
-}
-struct PlayerHeader* Actor::getheader(){
-    return &header;
-}
-void Actor::setfileoffsetfrombeg(int32_t offset){
-    if(f){
-        fseek(f,offset,SEEK_SET);
-    }
-}
-void Actor::setfileoffsetfromend(int32_t offset){
-    if(f){
-        fseek(f,offset,SEEK_END);
-    }
-}
-void Actor::Actor::setfileoffsetfromcur(int32_t offset){
-    if(f){
-        fseek(f,offset,SEEK_CUR);
-    }
-}
-Actor::~Actor(){
-    if(f){
-        fclose(f);
-    }
-}
-void Actor::writeheader(){
-    if(f){
-        setfileoffsetfrombeg(0);
-        fwrite(&header,sizeof(struct PlayerHeader),1,f);
-    }
+
+
+void Actor::writeheader(struct PlayerHeader* header){
+
 }
 void Actor::makeuuid(){
     union Uid128u u;
     ur->getu128rand(&u);
-    memcpy(&header.uuid,&u.u,sizeof(struct Uid128));
-    URand::getu128string(&u,uuid);
+   // URand::getu128string(&u,uuid);
 }
-char* Actor::getuuid(){
-    return uuid;
-}
+
 void Actor::decryptuidstring(const std::string& str){
     if(str.length()!=UID128LENGTH-1){
         return;
@@ -91,8 +37,7 @@ void Actor::decryptuidstring(const std::string& str){
     union Uid128u u = {0};
     URand::makeu128bytes(&u,str.c_str());
     ur->decryptu128(&u);
-    memcpy(&header.uuid,&u.u,sizeof(struct Uid128));
-    URand::getu128string(&u,uuid);
+   // URand::getu128string(&u,uuid);
 }
 /*
  char b[80] = {0};
