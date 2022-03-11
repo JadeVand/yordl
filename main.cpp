@@ -57,7 +57,7 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 actor->makeuuid();
                 nlohmann::json senduuidpacket;
                 senduuidpacket["pid"] = Identifiers::kMyId;
-                senduuidpacket["myuuid"] = actor->getuuid();
+                senduuidpacket["uidprivate"] = actor->getuuid();
                 actor->getconnection()->send(senduuidpacket.dump(),uWS::OpCode::TEXT,true);
                 actor->createfile();
             }else{

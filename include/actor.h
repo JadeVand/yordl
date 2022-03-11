@@ -45,6 +45,7 @@ public:
     void makeuuid();
     void setuuid(char* uuid);
     char* getuuid();
+    void decryptuidstring(const std::string& str);
     ~Actor();
 };
 #endif

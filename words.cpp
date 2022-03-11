@@ -96,7 +96,7 @@ WordValidation Word::checkword(uint32_t* result,const std::string& guess,const s
             }
         }
     }
-    std::cout << res << std::endl;
+
     for(size_t index = 0; index < res.length(); ++index){
         if(res[index]==correct[index]){
             mask(&high,index);

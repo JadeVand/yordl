@@ -84,6 +84,13 @@ void Actor::makeuuid(){
 char* Actor::getuuid(){
     return uuid;
 }
+void Actor::decryptuidstring(const std::string& str){
+    if(str.length()!=UID128LENGTH-1){
+        return;
+    }
+    union Uid128u u = {0};
+    URand::makeu128bytes(&u,str.c_str());
+}
 /*
  char b[80] = {0};
  for(char c = 10; c < 90; ++c){

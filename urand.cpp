@@ -1,8 +1,13 @@
 #include <urand.h>
 
 URand::URand() :
-    generator(std::random_device()()){
-
+generator(std::random_device()()){
+    FILE* f = fopen("keyfile","rb");
+    assert(f);
+    uint8_t b[sizeof(uint64_t)*2] = {0};
+    fread(b,sizeof(b),1,f);
+    fclose(f);
+    Blowfish_Init(&bctx,b,sizeof(b));
 }
 
 uint16_t URand::getu16rand(){
@@ -35,4 +40,33 @@ uint64_t URand::makeu64(uint32_t high, uint32_t low){
     v = (v | high) << 32;
     v |= low;
     return v;
+}
+void URand::makeu128bytes(union Uid128u* u,const char* str){
+    for(uintptr_t i = 0; i < sizeof(struct Uid128);++i){
+        sscanf(str + 2*i, "%02x", &u->b[i]);
+    }
+}
+void URand::encryptu128(union Uid128u* u){
+    uint32_t hhigh = URand::get32high(u->u.high);
+    uint32_t hlow = URand::get32low(u->u.high);
+    uint32_t lhigh = URand::get32high(u->u.low);
+    uint32_t llow = URand::get32low(u->u.low);
+    Blowfish_Encrypt(&bctx,&hhigh,&hlow);
+    Blowfish_Encrypt(&bctx,&lhigh,&llow);
+    uint64_t mu64h = URand::makeu64(hhigh,hlow);
+    uint64_t mu64l = URand::makeu64(lhigh,llow);
+    u->u.high = mu64h;
+    u->u.low = mu64l;
+}
+void URand::decryptu128(union Uid128u* u){
+    uint32_t hhigh = URand::get32high(u->u.high);
+    uint32_t hlow = URand::get32low(u->u.high);
+    uint32_t lhigh = URand::get32high(u->u.low);
+    uint32_t llow = URand::get32low(u->u.low);
+    Blowfish_Decrypt(&bctx,&hhigh,&hlow);
+    Blowfish_Decrypt(&bctx,&lhigh,&llow);
+    uint64_t mu64h = URand::makeu64(hhigh,hlow);
+    uint64_t mu64l = URand::makeu64(lhigh,llow);
+    u->u.high = mu64h;
+    u->u.low = mu64l;
 }
