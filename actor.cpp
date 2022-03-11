@@ -79,7 +79,7 @@ void Actor::makeuuid(){
     union Uid128u u;
     ur->getu128rand(&u);
     memcpy(&header.uuid,&u.u,sizeof(struct Uid128));
-    ur->getu128string(&u,uuid);
+    URand::getu128string(&u,uuid);
 }
 char* Actor::getuuid(){
     return uuid;
@@ -90,6 +90,9 @@ void Actor::decryptuidstring(const std::string& str){
     }
     union Uid128u u = {0};
     URand::makeu128bytes(&u,str.c_str());
+    ur->decryptu128(&u);
+    memcpy(&header.uuid,&u.u,sizeof(struct Uid128));
+    URand::getu128string(&u,uuid);
 }
 /*
  char b[80] = {0};

@@ -4,7 +4,7 @@ URand::URand() :
 generator(std::random_device()()){
     FILE* f = fopen("keyfile","rb");
     assert(f);
-    uint8_t b[sizeof(uint64_t)*2] = {0};
+    uint8_t b[sizeof(struct Uid128)] = {0};
     fread(b,sizeof(b),1,f);
     fclose(f);
     Blowfish_Init(&bctx,b,sizeof(b));

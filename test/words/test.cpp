@@ -16,7 +16,10 @@ int main(){
     union Uid128u u = {0};
     ur.getu128rand(&u);
     printb(u.b);
-    u.u.high = 0xDEADBEEFFEEBDAED;
+    //u.u.high = 0xDEADBEEFFEEBDAED;
+    uint32_t x = 0xDEADBEEF;
+    memcpy(u.b,&x,sizeof(uint32_t));
     printb(u.b);
+    printf("%llx\n",u.u.high);
     return 0;
 }
