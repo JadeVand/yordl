@@ -223,7 +223,7 @@ bool Word::neednewword(time_t servertime,time_t now){
     
     return true;
 }
-void Word::sethistory(time_t day){
+void Word::appendhistory(time_t day){
     std::ifstream ifhistory("yordl-history.json");
     nlohmann::json jshistory;
     if(ifhistory.good()){
@@ -315,7 +315,7 @@ void Word::getnewword(time_t servertime,time_t now){
     
     if(!assignedword.empty()){
         setcurrentword(assignedword,assignedcategory,diff);
-        sethistory(diff);
+        appendhistory(diff);
         return;
     }
     
@@ -388,7 +388,7 @@ void Word::getnewchampword(time_t day){
     std::string assignedcategory = "champion";
     
     setcurrentword(assignedword,assignedcategory,day);
-    sethistory(day);
+    appendhistory(day);
 }
 void Word::getnewabilityword(time_t day){
     //how do I pick a random ability from each key's value?
@@ -426,7 +426,7 @@ void Word::getnewabilityword(time_t day){
     std::string assignedcategory = "ability";
     
     setcurrentword(assignedword,assignedcategory,day);
-    sethistory(day);
+    appendhistory(day);
 }
 const std::string& Word::getword(){
     return currentword;

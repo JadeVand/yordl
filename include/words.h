@@ -49,7 +49,7 @@ public:
     static bool isvalidlength(const std::string& str);
 private:
 protected:
-    void sethistory(time_t day);
+    void appendhistory(time_t day);
     void getnewchampword(time_t day);
     void getnewabilityword(time_t day);
     void setcurrentword(std::string currentword,std::string category, time_t day);
