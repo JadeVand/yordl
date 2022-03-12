@@ -118,7 +118,7 @@ WordValidation Word::checkword(uint32_t* result,const std::string& guess,const s
     
     return WordValidation::kWordOk;
 }
-uint8_t Word::getrowsforlength(uint64_t length){
+uint8_t Word::getrowsforlength(size_t length){
     if(length < 3)
         return 0;
     if(length<5)

@@ -11,6 +11,7 @@ enum class Identifiers : uint32_t
     kMyId,
     kGuess,
     kStatsForUuid,
+    kWord,
 };
 struct PlayerHeader{
     struct Uid128 uid;

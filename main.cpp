@@ -137,7 +137,17 @@ void ServerInstance::onconnect(uWS::WebSocket<true,true,PerSocketData>* ws)
         
         ws->getUserData()->data = actor.get();
         players.insert(actor);
+        
+        std::string word = wordle.getword();
+        size_t length = word.length();
+        uint8_t rows = Word::getrowsforlength(length);
+        nlohmann::json packet ;
+        packet["pid"] = Identifiers::kWord;
+        packet["length"] = length;
+        packet["rows"] = rows;
+        actor->getconnection()->send(packet.dump(),uWS::OpCode::TEXT,true);
     }
+    
 }
 
 void ServerInstance::onremove(uWS::WebSocket<true,true,PerSocketData>* ws,int code, std::string_view message)
