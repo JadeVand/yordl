@@ -67,10 +67,10 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
         }
             break;
         case Identifiers::kGuess:{
-            std::string letter ;
+            std::string row ;
             try
             {
-                letter = packet.at("guess");
+                row = packet.at("guess");
             }
             catch (nlohmann::json::exception&)
             {
@@ -78,14 +78,20 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             }
             nlohmann::json out ;
             out["pid"] = Identifiers::kGuess;
-            if(!wordle.isvalidword(letter)){
-                
-                
+            uint32_t result = 0;
+            std::string currentword = wordle.getword();
+            WordValidation valid = Word::checkword(&result,row,currentword);
+            if(valid==WordValidation::kWordBadLength){
+                out["valud"] = false;
+            }else if(valid == WordValidation::kWordNonExist){
                 out["valid"] = false;
-                actor->getconnection()->send(out.dump().c_str(),uWS::OpCode::TEXT,true);
-            }else{
-                out["valud"] = true;
+            }else if(valid == WordValidation::kWordOk){
+                out["valid"] = true;
+                out["result"] = result;
             }
+            actor->getconnection()->send(out.dump(),uWS::OpCode::TEXT,true);
+            
+            //update the actor's stats
         }
             break;
         case Identifiers::kStatsForUuid:{
@@ -109,6 +115,7 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             stats["current"] = header.currenstreak;
             stats["max"] = header.maxstreak;
             actor->getconnection()->send(stats.dump().c_str(),uWS::OpCode::TEXT,true);
+            
         }
             break;
         default:

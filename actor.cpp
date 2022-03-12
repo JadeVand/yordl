@@ -17,11 +17,28 @@ uWS::WebSocket<true,true,PerSocketData>* Actor::getconnection(){
 
 void Actor::readheader(struct PlayerHeader* header){
 
+    char str[UID128LENGTH] = {0};
+    URand::getu128string(&uid,str);
+    std::string filename = "yordles/";
+    filename.append(str);
+    FILE* f = fopen(filename.c_str(),"rb");
+    if(f){
+        fread(header,sizeof(struct PlayerHeader),1,f);
+        fclose(f);
+    }
 }
 
 
 void Actor::writeheader(struct PlayerHeader* header){
-
+    char str[UID128LENGTH] = {0};
+    URand::getu128string(&uid,str);
+    std::string filename = "yordles/";
+    filename.append(str);
+    FILE* f = fopen(filename.c_str(),"rb+");
+    if(f){
+        fwrite(header,sizeof(struct PlayerHeader),1,f);
+        fclose(f);
+    }
 }
 void Actor::makeuuid(){
     union Uid128u u;

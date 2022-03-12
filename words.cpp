@@ -81,7 +81,7 @@ WordValidation Word::checkword(uint32_t* result,const std::string& guess,const s
         return WordValidation::kWordBadLength;
     }
     //check if word exists
-    if(!Word::isvalidword(guess)){
+    if(!Word::indictionary(guess)){
         //  return WordValidation::kWordNonExist
         return WordValidation::kWordNonExist;
     }
@@ -131,7 +131,7 @@ uint8_t Word::getrowsforlength(uint64_t length){
         return 8;
     return 0;
 }
-bool Word::isvalidword(std::string s){
+bool Word::indictionary(std::string s){
     std::ifstream ifs("yordl-champions.json");
     nlohmann::json jf = nlohmann::json::parse(ifs);
     ifs.close();
@@ -223,7 +223,7 @@ bool Word::neednewword(time_t servertime,time_t now){
     
     return true;
 }
-void Word::sethistory(std::string currentword,std::string category,time_t day){
+void Word::sethistory(time_t day){
     std::ifstream ifhistory("yordl-history.json");
     nlohmann::json jshistory;
     if(ifhistory.good()){
@@ -249,6 +249,11 @@ void Word::sethistory(std::string currentword,std::string category,time_t day){
     ofhistory.close();
 }
 void Word::setcurrentword(std::string currentword,std::string category, time_t day){
+
+    //https://stackoverflow.com/a/735215/8350647
+    std::transform(currentword.begin(), currentword.end(),currentword.begin(), ::toupper);
+    //
+    
     this->currentword.assign(currentword);
     this->category.assign(category);
     std::ofstream ofs("yordl-currentword.json");
@@ -310,7 +315,7 @@ void Word::getnewword(time_t servertime,time_t now){
     
     if(!assignedword.empty()){
         setcurrentword(assignedword,assignedcategory,diff);
-        sethistory(currentword,category,diff);
+        sethistory(diff);
         return;
     }
     
@@ -383,7 +388,7 @@ void Word::getnewchampword(time_t day){
     std::string assignedcategory = "champion";
     
     setcurrentword(assignedword,assignedcategory,day);
-    sethistory(assignedword,assignedcategory,day);
+    sethistory(day);
 }
 void Word::getnewabilityword(time_t day){
     //how do I pick a random ability from each key's value?
@@ -421,7 +426,7 @@ void Word::getnewabilityword(time_t day){
     std::string assignedcategory = "ability";
     
     setcurrentword(assignedword,assignedcategory,day);
-    sethistory(assignedword,assignedcategory,day);
+    sethistory(day);
 }
 const std::string& Word::getword(){
     return currentword;
