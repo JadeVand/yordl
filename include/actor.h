@@ -25,8 +25,7 @@ private:
     uWS::WebSocket<true,true,PerSocketData>* connection;
     URand* ur;
     uint8_t index;
-    union Uid128u decryptuid ;
-    union Uid128u encryptuid ;
+    union Uid128u uid ;
 public:
     Actor(uWS::WebSocket<true,true,PerSocketData>* connection,URand* ur);
     uint64_t getid();
@@ -34,7 +33,11 @@ public:
     void readheader(struct PlayerHeader* header);
     void writeheader(struct PlayerHeader* header);
     void makeuuid();
-    void decryptuidstring(const std::string& str);
+    void stringtouid(const std::string& uid);
+    void assignuid(union Uid128u* u);
+    void decryptuidstring(union Uid128u* u, const std::string& str);
+    std::string getencryptuid();
+    std::string getdecryptuid();
     ~Actor();
 };
 #endif

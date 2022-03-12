@@ -11,15 +11,12 @@ void printb(uint8_t* b){
     }
     printf("\n");
 }
+
 int main(){
     URand ur ;
     union Uid128u u = {0};
     ur.getu128rand(&u);
-    printb(u.b);
-    //u.u.high = 0xDEADBEEFFEEBDAED;
-    uint32_t x = 0xDEADBEEF;
-    memcpy(u.b,&x,sizeof(uint32_t));
-    printb(u.b);
-    printf("%llx\n",u.u.high);
+    char c[UID128LENGTH] = {0};
+    URand::getu128string(&u,c);
     return 0;
 }

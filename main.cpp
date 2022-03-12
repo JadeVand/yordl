@@ -47,26 +47,21 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             nlohmann::json uuidpacket = nlohmann::json::parse(buffer);
             try
             {
-                selfid = uuidpacket.at("myuuid");
+                selfid = uuidpacket.at("uidprivate");
             }
             catch (nlohmann::json::exception &e)
             {
                 return;
             }
             if(!selfid.compare("null")){
-                //make uid
-                //encrypt uid
-                //send private-uid(encrypted) and public uid
                 actor->makeuuid();
                 nlohmann::json senduuidpacket;
                 senduuidpacket["pid"] = Identifiers::kMyId;
-               // senduuidpacket["uidpublic"] = actor->getuuid();
-                
+                senduuidpacket["uidpublic"] = actor->getdecryptuid();
+                senduuidpacket["uidprivate"] = actor->getencryptuid();
+
                 actor->getconnection()->send(senduuidpacket.dump(),uWS::OpCode::TEXT,true);
             }else{
-                //decrypt uid
-                //open file
-                //read header
                 
             }
         }
@@ -96,7 +91,7 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
         case Identifiers::kStatsForUuid:{
             std::string uid;
             try{
-                uid = packet.at("uid");
+                uid = packet.at("uidpublic");
             }catch(nlohmann::json::exception& e){
                 return;
             }
