@@ -71,6 +71,7 @@ void Word::mask(uint16_t* s, uintptr_t index){
             break;
     }
 }
+
 WordValidation Word::checkword(uint32_t* result,const std::string& guess,const std::string& correct){
     
     if(guess.length()!=correct.length()){
@@ -147,6 +148,7 @@ bool Word::isvalidword(std::string s){
     }
     return found;
 }
+
 #define SECONDS_IN_DAY 86400
 bool Word::neednewword(time_t servertime,time_t now){
     
@@ -256,6 +258,13 @@ void Word::setcurrentword(std::string currentword,std::string category, time_t d
     ofs << j;
     ofs.close();
 }
+bool Word::isvalidlength(const std::string& str){
+    return str.length()<LEAGUE_WORD_LENGTH?true:false;
+}
+//https://stackoverflow.com/a/20326507/8350647
+void Word::removeapos(std::string& str){
+    str.erase(std::remove(str.begin(), str.end(), '\''), str.end());
+}
 void Word::getnewword(time_t servertime,time_t now){
     
     
@@ -301,13 +310,17 @@ void Word::getnewword(time_t servertime,time_t now){
     }
     
     uint16_t r = ur->getu16rand();
-    r%=2;
+    r%=1;//temporarely only reading champion names
+    //abilities havent been established yet
     switch(r){
         case 0://champ
             getnewchampword(diff);
             break;
         case 1://ability
-            getnewabilityword(diff);
+            getnewchampword(diff);
+            break;
+        case 2:
+            //items not yet established
             break;
     }
     
@@ -354,7 +367,14 @@ void Word::getnewchampword(time_t day){
     }
     uint16_t r = ur->getu16rand();
     r%=vec.size();
-    std::string assignedword = vec.at(r);
+    bool found = false;
+    std::string assignedword;
+    do{
+        assignedword = vec.at(r);
+        removeapos(assignedword);
+        found = isvalidlength(assignedword);
+    }while(!found);
+    
     std::string assignedcategory = "champion";
     
     setcurrentword(assignedword,assignedcategory,day);
@@ -385,9 +405,14 @@ void Word::getnewabilityword(time_t day){
         vec.erase(std::remove(vec.begin(), vec.end(), k), vec.end());
     }
     uint16_t r = ur->getu16rand();
-    r%=vec.size();
+    bool found = false;
+    std::string assignedword;
+    do{
+        assignedword = vec.at(r);
+        removeapos(assignedword);
+        found = isvalidlength(assignedword);
+    }while(!found);
     
-    std::string assignedword = vec.at(r);
     std::string assignedcategory = "ability";
     
     setcurrentword(assignedword,assignedcategory,day);

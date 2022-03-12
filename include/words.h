@@ -6,7 +6,8 @@
 #include <memory>
 #include <string>
 #include <fstream>
-#define LEAGUE_WORD_LENGTH 16
+#include <algorithm>
+#define LEAGUE_WORD_LENGTH 17
 enum class WordValidation : uint32_t{
     kWordOk,
     kWordBadLength,
@@ -52,5 +53,8 @@ protected:
     void getnewabilityword(time_t day);
     void setcurrentword(std::string currentword,std::string category, time_t day);
     static void mask(uint16_t* s, uintptr_t index);
+    
+    bool isvalidlength(const std::string& str);
+    void removeapos(std::string& str);
 };
 #endif
