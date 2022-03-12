@@ -43,9 +43,10 @@ public:
     void gethistory(std::vector<std::string>& vechistory);
     void incrementstateattempt();
     void incrementstateattemptandsuccess();
-    bool isvalidword(std::string s);
+    static bool isvalidword(std::string s);
     static WordValidation checkword(uint32_t* result,const std::string& guess,const std::string& correct);
     static uint8_t getrowsforlength(uint64_t length);
+    static bool isvalidlength(const std::string& str);
 private:
 protected:
     void sethistory(std::string currentword,std::string category,time_t day);
@@ -54,7 +55,7 @@ protected:
     void setcurrentword(std::string currentword,std::string category, time_t day);
     static void mask(uint16_t* s, uintptr_t index);
     
-    bool isvalidlength(const std::string& str);
+    
     void removeapos(std::string& str);
 };
 #endif

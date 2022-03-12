@@ -77,10 +77,15 @@ WordValidation Word::checkword(uint32_t* result,const std::string& guess,const s
     if(guess.length()!=correct.length()){
         return WordValidation::kWordBadLength;
     }
-    
+    if(!Word::isvalidlength(guess)){
+        return WordValidation::kWordBadLength;
+    }
     //check if word exists
-    //if(!wordexists())
-    //  return WordValidation::kWordNonExist
+    if(!Word::isvalidword(guess)){
+        //  return WordValidation::kWordNonExist
+        return WordValidation::kWordNonExist;
+    }
+    
     std::string temp = correct;
     size_t s = guess.length();
     uint16_t high = 0;
