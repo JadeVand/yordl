@@ -471,3 +471,7 @@ void Word::incrementstateattemptandsuccess(){
     fwrite(&success,sizeof(uint64_t),1,f);
     fclose(f);
 }
+
+uint8_t Word::getrowcount(){
+    return Word::getrowsforlength(currentword.length());
+}

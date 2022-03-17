@@ -47,6 +47,7 @@ public:
     static WordValidation checkword(uint32_t* result,const std::string& guess,const std::string& correct);
     static uint8_t getrowsforlength(size_t length);
     static bool isvalidlength(const std::string& str);
+    uint8_t getrowcount();
 private:
 protected:
     void appendhistory(time_t day);

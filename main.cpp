@@ -63,6 +63,7 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 actor->getconnection()->send(senduuidpacket.dump(),uWS::OpCode::TEXT,true);
             }else{
                 actor->stringtouid(selfid);
+                
             }
         }
             break;

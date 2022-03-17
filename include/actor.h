@@ -15,9 +15,10 @@ enum class Identifiers : uint32_t
 };
 struct PlayerHeader{
     struct Uid128 uid;
-    uint32_t score;
+    uint16_t score;
     uint16_t currenstreak;
     uint16_t maxstreak;
+    uint16_t dayofprogress;
     char progress[128];
 };
 
@@ -39,6 +40,7 @@ public:
     void decryptuidstring(union Uid128u* u, const std::string& str);
     std::string getencryptuid();
     std::string getdecryptuid();
+
     ~Actor();
 };
 #endif
