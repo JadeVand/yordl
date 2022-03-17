@@ -90,6 +90,8 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                         }
                     }
                     actor->getconnection()->send(progress.dump(),uWS::OpCode::TEXT,true);
+                    /*sending progress but how do I tell the user which letters are correct and which arent? Should I just store it in the users local cache since it's not critical info? and if manipulated cant do any harm
+                     */
                 }
             }
         }
