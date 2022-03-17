@@ -76,13 +76,14 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             {
                 return;
             }
+            
             nlohmann::json out ;
             out["pid"] = Identifiers::kGuess;
             uint32_t result = 0;
             std::string currentword = wordle.getword();
             WordValidation valid = Word::checkword(&result,row,currentword);
             if(valid==WordValidation::kWordBadLength){
-                out["valud"] = false;
+                out["valid"] = false;
             }else if(valid == WordValidation::kWordNonExist){
                 out["valid"] = false;
             }else if(valid == WordValidation::kWordOk){

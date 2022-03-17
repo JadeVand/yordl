@@ -106,6 +106,7 @@ WordValidation Word::checkword(uint32_t* result,const std::string& guess,const s
     for(size_t index = 0; index < res.length(); ++index){
         if(res[index]==correct[index]){
             mask(&high,index);
+            mask(&low,index);
         }else if(res[index]=='0'){
             
         }else{
@@ -140,12 +141,17 @@ bool Word::indictionary(std::string s){
     
     for (auto& [key, val] : jf.items())
     {
-        if(!s.compare(key)){
+        std::string kval = key;
+        std::transform(kval.begin(), kval.end(),kval.begin(), ::toupper);
+        if(!s.compare(kval)){
+            
             found = true;
             break;
         }
         for(auto& [k,v]:val.items()){
-            if(!s.compare(v)){
+            std::string vval = v;
+            std::transform(vval.begin(), vval.end(),vval.begin(), ::toupper);
+            if(!s.compare(vval)){
                 found = true;
                 break;
             }
