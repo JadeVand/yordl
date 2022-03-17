@@ -48,6 +48,8 @@ public:
     static uint8_t getrowsforlength(size_t length);
     static bool isvalidlength(const std::string& str);
     uint8_t getrowcount();
+    time_t getday(time_t servertime,time_t now);
+    size_t getwordlength();
 private:
 protected:
     void appendhistory(time_t day);

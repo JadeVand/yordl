@@ -12,6 +12,7 @@ enum class Identifiers : uint32_t
     kGuess,
     kStatsForUuid,
     kWord,
+    kProgress,
 };
 struct PlayerHeader{
     struct Uid128 uid;
@@ -40,7 +41,8 @@ public:
     void decryptuidstring(union Uid128u* u, const std::string& str);
     std::string getencryptuid();
     std::string getdecryptuid();
-
+    void setindex(uint8_t index);
+    uint8_t getindex();
     ~Actor();
 };
 #endif

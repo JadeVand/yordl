@@ -3,6 +3,7 @@ Actor::Actor(uWS::WebSocket<true,true,PerSocketData>* connection,URand* ur){
     this->connection = connection;
     this->ur = ur;
     memset(&uid,0,sizeof(union Uid128u));
+    index = 0;
 }
 Actor::~Actor(){
 
@@ -77,4 +78,11 @@ void Actor::decryptuidstring(union Uid128u* u, const std::string& str){
     URand::makeu128bytes(u,str.c_str());
     ur->decryptu128(u);
    // URand::getu128string(&u,uuid);
+}
+
+void Actor::setindex(uint8_t index){
+    this->index = index;
+}
+uint8_t Actor::getindex(){
+    return index;
 }

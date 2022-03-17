@@ -159,13 +159,17 @@ bool Word::indictionary(std::string s){
     }
     return found;
 }
-
 #define SECONDS_IN_DAY 86400
-bool Word::neednewword(time_t servertime,time_t now){
-    
+time_t Word::getday(time_t servertime,time_t now){
     time_t diff = now - servertime;
     diff/=SECONDS_IN_DAY;//this is our day, we check if this file currently exists, if not we make a new file with our new word
+    return diff;
+}
+
+bool Word::neednewword(time_t servertime,time_t now){
     
+    
+    time_t diff = getday(servertime,now);
     std::ifstream ifs("yordl-currentword.json");
     if(ifs.good()){
         nlohmann::json jf = nlohmann::json::parse(ifs);
@@ -474,4 +478,7 @@ void Word::incrementstateattemptandsuccess(){
 
 uint8_t Word::getrowcount(){
     return Word::getrowsforlength(currentword.length());
+}
+size_t Word::getwordlength(){
+    return currentword.length();
 }

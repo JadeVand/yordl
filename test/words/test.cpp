@@ -13,10 +13,9 @@ void printb(uint8_t* b){
 }
 
 int main(){
-    URand ur ;
-    union Uid128u u = {0};
-    ur.getu128rand(&u);
-    char c[UID128LENGTH] = {0};
-    URand::getu128string(&u,c);
+    char x[][6] = {"hello","world"};
+    for(int i = 0; i < 2; ++i){
+        printf("%s\n",x[i]);
+    }
     return 0;
 }

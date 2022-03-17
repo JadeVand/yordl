@@ -63,7 +63,34 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 actor->getconnection()->send(senduuidpacket.dump(),uWS::OpCode::TEXT,true);
             }else{
                 actor->stringtouid(selfid);
-                
+                PlayerHeader header = {0};
+                actor->readheader(&header);
+                time_t day = wordle.getday(servertime,time_since_epoch());
+                if(day!=header.dayofprogress){
+                    memset(header.progress,0,sizeof(header.progress));
+                    actor->writeheader(&header);
+                }else{
+                    
+                    nlohmann::json progress;
+                    progress["pid"] = Identifiers::kProgress;
+                    progress["progress"] = nlohmann::json::array();
+                    
+                    uint8_t rowcount =wordle.getrowcount();
+                    typedef char Word2D[rowcount][wordle.getwordlength()] ;
+                    Word2D* matrix = (Word2D*)header.progress;
+                    for(uint8_t row = 0; row < rowcount;++row){
+                        if(*matrix[row][0]==0){
+                            actor->setindex(row);
+                            break;
+                        }else{
+                            std::string word;
+                            word.assign(*matrix[row]);
+                            progress["progress"].push_back(word);
+                            
+                        }
+                    }
+                    actor->getconnection()->send(progress.dump(),uWS::OpCode::TEXT,true);
+                }
             }
         }
             break;
