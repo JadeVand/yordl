@@ -43,6 +43,9 @@ public:
     std::string getdecryptuid();
     void setindex(uint8_t index);
     uint8_t getindex();
+    void incrementindex();
+    union Uid128u* getuid();
+    void inityordl();
     ~Actor();
 };
 #endif

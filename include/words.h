@@ -7,6 +7,18 @@
 #include <string>
 #include <fstream>
 #include <algorithm>
+
+#if DEBUG
+#define log(...) {\
+    char str[100];\
+    snprintf(str, sizeof(str),__VA_ARGS__);\
+    std::cout << "[" << __FILE__ << "][" << __FUNCTION__ << "][Line " << __LINE__ << "] " << str << std::endl;\
+    }
+#else
+#define log(...)
+#endif
+
+
 #define LEAGUE_WORD_LENGTH 17
 enum class WordValidation : uint32_t{
     kWordOk,

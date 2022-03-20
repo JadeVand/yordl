@@ -54,7 +54,7 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 return;
             }
             if(!selfid.compare("null")){
-                actor->makeuuid();
+                actor->inityordl();
                 nlohmann::json senduuidpacket;
                 senduuidpacket["pid"] = Identifiers::kMyId;
                 senduuidpacket["uidpublic"] = actor->getdecryptuid();
@@ -120,6 +120,16 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             }else if(valid == WordValidation::kWordOk){
                 out["valid"] = true;
                 out["result"] = result;
+                uint8_t rowcount =wordle.getrowcount();
+                size_t l = wordle.getwordlength();
+                typedef char Word2D[rowcount][l] ;
+                struct PlayerHeader header = {0};
+                actor->readheader(&header);
+                
+                Word2D* matrix = (Word2D*)header.progress;
+                strncpy(*matrix[actor->getindex()],row.c_str(),l);
+                actor->incrementindex();
+                actor->writeheader(&header);
             }
             actor->getconnection()->send(out.dump(),uWS::OpCode::TEXT,true);
             
@@ -146,6 +156,7 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             stats["score"] = header.score;
             stats["current"] = header.currenstreak;
             stats["max"] = header.maxstreak;
+            
             actor->getconnection()->send(stats.dump().c_str(),uWS::OpCode::TEXT,true);
             
         }

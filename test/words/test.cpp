@@ -13,9 +13,14 @@ void printb(uint8_t* b){
 }
 
 int main(){
-    char x[][6] = {"hello","world"};
-    for(int i = 0; i < 2; ++i){
-        printf("%s\n",x[i]);
-    }
+    char x[120];
+    typedef char Word2d[5][5];
+    Word2d* w2d = (Word2d*)x;
+    char h1[] = "hello";
+    char h2[] = "world";
+    strncpy(*w2d[0],h1,5);
+    strncpy(*w2d[1],h2,5);
+    printf("%s\n",*w2d);
+
     return 0;
 }

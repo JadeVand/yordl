@@ -37,6 +37,7 @@ void Actor::writeheader(struct PlayerHeader* header){
     filename.append(str);
     FILE* f = fopen(filename.c_str(),"rb+");
     if(f){
+        log("Found file");
         fwrite(header,sizeof(struct PlayerHeader),1,f);
         fclose(f);
     }
@@ -85,4 +86,24 @@ void Actor::setindex(uint8_t index){
 }
 uint8_t Actor::getindex(){
     return index;
+}
+
+void Actor::incrementindex(){
+    ++index;
+}
+union Uid128u* Actor::getuid(){
+    return &uid;
+}
+void Actor::inityordl(){
+    makeuuid();
+    struct PlayerHeader header = {0};
+    memcpy(&header.uid,&uid.u,sizeof(struct Uid128));
+    char str[UID128LENGTH] = {0};
+    URand::getu128string(&uid,str);
+    std::string filename = "yordles/";
+    filename.append(str);
+    FILE* f = fopen(filename.c_str(),"w");
+    assert(f);
+    fclose(f);
+    writeheader(&header);
 }
