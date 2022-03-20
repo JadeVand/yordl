@@ -68,6 +68,7 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 time_t day = wordle.getday(servertime,time_since_epoch());
                 if(day!=header.dayofprogress){
                     memset(header.progress,0,sizeof(header.progress));
+                    
                     actor->writeheader(&header);
                 }else{
                     
@@ -118,6 +119,8 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
             }else if(valid == WordValidation::kWordNonExist){
                 out["valid"] = false;
             }else if(valid == WordValidation::kWordOk){
+                time_t day = wordle.getday(servertime,time_since_epoch());
+                log("");
                 out["valid"] = true;
                 out["result"] = result;
                 uint8_t rowcount =wordle.getrowcount();
@@ -125,7 +128,7 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 typedef char Word2D[rowcount][l] ;
                 struct PlayerHeader header = {0};
                 actor->readheader(&header);
-                
+                header.dayofprogress = (uint16_t)day;
                 Word2D* matrix = (Word2D*)header.progress;
                 strncpy(*matrix[actor->getindex()],row.c_str(),l);
                 actor->incrementindex();

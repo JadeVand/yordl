@@ -8,7 +8,9 @@
 #include <fstream>
 #include <algorithm>
 
-#if DEBUG
+#define DEBUG
+
+#ifdef DEBUG
 #define log(...) {\
     char str[100];\
     snprintf(str, sizeof(str),__VA_ARGS__);\

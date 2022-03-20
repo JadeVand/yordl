@@ -37,7 +37,7 @@ void Actor::writeheader(struct PlayerHeader* header){
     filename.append(str);
     FILE* f = fopen(filename.c_str(),"rb+");
     if(f){
-        log("Found file");
+        log("");
         fwrite(header,sizeof(struct PlayerHeader),1,f);
         fclose(f);
     }
