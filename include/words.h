@@ -50,6 +50,7 @@ public:
     uint8_t getrowcount();
     time_t getday(time_t servertime,time_t now);
     size_t getwordlength();
+    static void removeapos(std::string& str);
 private:
 protected:
     void appendhistory(time_t day);
@@ -59,6 +60,6 @@ protected:
     static void mask(uint16_t* s, uintptr_t index);
     
     
-    void removeapos(std::string& str);
+    
 };
 #endif

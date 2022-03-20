@@ -143,6 +143,7 @@ bool Word::indictionary(std::string s){
     {
         std::string kval = key;
         std::transform(kval.begin(), kval.end(),kval.begin(), ::toupper);
+        removeapos(kval);
         if(!s.compare(kval)){
             
             found = true;
