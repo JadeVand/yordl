@@ -78,18 +78,25 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                     
                     uint8_t rowcount =wordle.getrowcount();
                     size_t l = wordle.getwordlength();
-                    typedef char Word2D[rowcount][wordle.getwordlength()] ;
+                    typedef char Word2D[rowcount][l+1] ;
                     Word2D* matrix = (Word2D*)header.progress;
                     for(uint8_t row = 0; row < rowcount;++row){
                         std::string word;
                         if(*matrix[row][0]==0){
                             actor->setindex(row);
+                           
                             break;
                         }
                         for(size_t c = 0; c < l ; ++c){
                             word.append(matrix[row][c]);
                         }
-                        progress["progress"].push_back(word);
+                        try{
+                            progress["progress"].push_back(word);
+                        }catch(nlohmann::json::exception& e){
+                            std::cout << e.what() << std::endl;
+                            return;
+                        }
+                        
                     }
                     actor->getconnection()->send(progress.dump(),uWS::OpCode::TEXT,true);
                     /*sending progress but how do I tell the user which letters are correct and which arent? Should I just store it in the users local cache since it's not critical info? and if manipulated cant do any harm
@@ -120,12 +127,11 @@ void ServerInstance::packethandler(std::shared_ptr<Actor> actor, uint32_t packet
                 out["valid"] = false;
             }else if(valid == WordValidation::kWordOk){
                 time_t day = wordle.getday(servertime,time_since_epoch());
-                log("");
                 out["valid"] = true;
                 out["result"] = result;
                 uint8_t rowcount =wordle.getrowcount();
                 size_t l = wordle.getwordlength();
-                typedef char Word2D[rowcount][l] ;
+                typedef char Word2D[rowcount][l+1] ;
                 struct PlayerHeader header = {0};
                 actor->readheader(&header);
                 header.dayofprogress = (uint16_t)day;
@@ -186,7 +192,7 @@ void ServerInstance::onconnect(uWS::WebSocket<true,true,PerSocketData>* ws)
         
         std::string word = wordle.getword();
         size_t length = word.length();
-        uint8_t rows = Word::getrowsforlength(length);
+        uint8_t rows = wordle.getrowcount();
         nlohmann::json packet ;
         packet["pid"] = Identifiers::kWord;
         packet["length"] = length;

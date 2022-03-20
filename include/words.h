@@ -8,7 +8,7 @@
 #include <fstream>
 #include <algorithm>
 
-#define DEBUG
+
 
 #ifdef DEBUG
 #define log(...) {\
@@ -21,7 +21,7 @@
 #endif
 
 
-#define LEAGUE_WORD_LENGTH 17
+#define LEAGUE_WORD_LENGTH 16
 enum class WordValidation : uint32_t{
     kWordOk,
     kWordBadLength,

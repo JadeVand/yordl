@@ -106,7 +106,7 @@ WordValidation Word::checkword(uint32_t* result,const std::string& guess,const s
     for(size_t index = 0; index < res.length(); ++index){
         if(res[index]==correct[index]){
             mask(&high,index);
-            mask(&low,index);
+            //mask(&low,index);
         }else if(res[index]=='0'){
             
         }else{
@@ -478,7 +478,8 @@ void Word::incrementstateattemptandsuccess(){
 }
 
 uint8_t Word::getrowcount(){
-    return Word::getrowsforlength(currentword.length());
+    uint8_t l = Word::getrowsforlength(currentword.length());
+    return l;
 }
 size_t Word::getwordlength(){
     return currentword.length();
